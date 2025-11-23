@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import api from "./Api";
-import { clearAccessToken, setAccessToken } from "./tokenManager";
+import { setAccessToken, clearAccessToken } from "./tokenManager";
 
 interface User {
   id: string;
