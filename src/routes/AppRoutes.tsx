@@ -7,7 +7,7 @@ import { ScrollToTop } from "../components/common/ScrollToTop";
 // Páginas
 import Home from "../pages/Home/Home";
 import SignIn from "../pages/SignIn/SignIn";
-// import SignUp from "../pages/AuthPages/SignUp";
+import SignUp from "../pages/SignUp/SignUp";
 import NotFound from "../pages/OtherPage/NotFound";
 
 function AppRoutes() {
@@ -34,7 +34,7 @@ function AppRoutes() {
       children: [
         { index: true, element: <Home /> },
         { path: "login", element: <SignIn /> },
-        // { path: "signup", element: <SignUp /> }
+        { path: "signup", element: <SignUp /> }
       ],
     },
 

@@ -1,5 +1,6 @@
 import Input from "../../components/form/input/InputField";
 import Label from "../../components/form/Label";
+import Button from "../../components/ui/button/Button";
 import api from "../../auth/Api";
 
 const SignIn = () => {
@@ -16,17 +17,22 @@ const SignIn = () => {
       <div className="p-6 borderborder-dark-border rounded-2xl bg-dark-bg-alt text-dark-text mx-auto max-w-lg w-full">
         <h3 className="title-text text-2xl">Entrar</h3>
         <form className="flex flex-col gap-1 mt-4" onSubmit={handleSubmit}>
-          <Label>Email</Label>
-          <Input name="email" type="email" required />
-          <Label className="mt-3">Senha</Label>
-          <Input name="password" type="password" required />
-          <button
+          <Label className="text-dark-text">Email</Label>
+          <Input name="email" type="email" className="text-dark-text" required />
+          <Label className="mt-3 text-dark-text">Senha</Label>
+          <Input name="password" type="password" className="text-dark-text" required />
+          <Button
             type="submit"
-            className="mt-4 bg-button-primary text-white py-2 px-4 rounded hover:bg-brand-700 transition-colors"
+            className="mt-4"
           >
             Entrar
-          </button>
+          </Button>
         </form>
+        <div>
+          <p className="mt-4 text-sm text-center text-dark-text">
+            Não tem uma conta? <a href="/signup" className="text-brand-500 hover:underline">Cadastre-se</a>
+          </p>
+        </div>
       </div>
     </div>
   );

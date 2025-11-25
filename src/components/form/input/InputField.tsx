@@ -12,6 +12,7 @@ interface InputProps {
   min?: string;
   max?: string;
   maxLength?: number;
+  minLength?: number;
   step?: number;
   disabled?: boolean;
   success?: boolean;
@@ -51,6 +52,7 @@ const Input: FC<InputProps> = ({
   style,
   fullWidth = true,
   inputRef,
+  minLength,
   inputMode ="text"
 }) => {
   const isDate = type === "date";
@@ -72,7 +74,7 @@ const Input: FC<InputProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div className="relative text-light-text dark:text-dark-text">
       <input
         inputMode={inputMode}
         type={type}
@@ -83,6 +85,7 @@ const Input: FC<InputProps> = ({
         onChange={onChange}
         min={min}
         max={max}
+        minLength={minLength}
         maxLength={maxLength}
         step={step}
         disabled={disabled}
