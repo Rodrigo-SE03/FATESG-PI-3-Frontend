@@ -86,7 +86,7 @@ const MobileBottomNav: React.FC = () => {
         border-t border-light-border dark:border-dark-border
         backdrop-blur
         px-3 py-2
-        sm:hidden
+        lg:hidden
         overflow-x-hidden
       "
     >
@@ -113,12 +113,12 @@ const MobileBottomNav: React.FC = () => {
         </div>
 
         {/* Divisor vertical */}
-        <div className="h-8 w-px bg-light-border dark:bg-dark-border mx-2 shrink-0" />
+        {/* <div className="h-8 w-px bg-light-border dark:bg-dark-border mx-2 shrink-0" /> */}
 
         {/* Grupo Others fixo à direita, sem scroll */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* <div className="flex items-center gap-3 shrink-0">
           {otherItems.map(renderFooterItem)}
-        </div>
+        </div> */}
       </div>
     </nav>
   );

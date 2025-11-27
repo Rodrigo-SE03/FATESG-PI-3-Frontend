@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { useThemeClass } from "../hooks/useThemeClass";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/AuthProvider";
 
 import { 
   House,
@@ -15,14 +16,16 @@ import {
   CircleUser, 
   Ellipsis, 
   ChevronDown,
+  LogOut
 } from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
+import { el } from "date-fns/locale";
 
 export type NavItem = {
   name: string;
   icon?: React.ReactNode;
   path?: string;
-  action?: "toggleTheme"; // novo
+  action?: "toggleTheme" | "logout"; // novo
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
@@ -64,12 +67,18 @@ export const othersItems: NavItem[] = [
     name: "Tema",
     action: "toggleTheme",
   },
+  {
+    icon: <LogOut />,
+    name: "Sair",
+    action: "logout",
+  }
 ];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, toggleSidebar } = useSidebar();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { logout } = useAuth();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -139,6 +148,8 @@ const AppSidebar: React.FC = () => {
     const renderIcon = (nav: NavItem) => {
       if (nav.action === "toggleTheme") {
         return theme === "dark" ? <Moon /> : <Sun />;
+      } else if (nav.action === "logout") {
+        return <LogOut />;
       }
       return nav.icon;
     };
@@ -212,6 +223,26 @@ const AppSidebar: React.FC = () => {
               <button
                 type="button"
                 onClick={toggleTheme}
+                className={`menu-item group menu-item-inactive ${
+                  !isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "lg:justify-start"
+                }`}
+              >
+                <span className="menu-item-icon-size menu-item-icon-inactive">
+                  {renderIcon(nav)}
+                </span>
+                {(isExpanded || isHovered || isMobileOpen) && (
+                  <span className="menu-item-text">{nav.name}</span>
+                )}
+              </button>
+            ) : nav.action === "logout" ? (
+              // ITEM DE AÇÃO: LOGOUT
+              <button
+                type="button"
+                onClick={async () => {
+                  await logout();
+                }}
                 className={`menu-item group menu-item-inactive ${
                   !isExpanded && !isHovered
                     ? "lg:justify-center"

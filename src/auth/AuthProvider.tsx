@@ -1,11 +1,22 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import api from "./Api";
-import { setAccessToken, clearAccessToken } from "./tokenManager";
+// src/auth/AuthContext.tsx
+import {
+  getCurrentUser,
+  fetchUserAttributes,
+  fetchAuthSession,
+  signOut,
+} from "aws-amplify/auth";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 
 interface User {
   id: string;
-  nome: string;
-  email: string;
+  nome?: string;
+  email?: string;
   profile_image?: string;
   [key: string]: any;
 }
@@ -14,63 +25,71 @@ interface AuthContextType {
   user: User | null;
   setUser: (u: User | null) => void;
   loadingUser: boolean;
-  setToken: (token: string) => void;
-  logout: () => void;
+  reloadUser: () => Promise<void>;
+  getToken: () => Promise<string | null>;
+  logout: () => Promise<void>;
 }
 
-// const isDev = import.meta.env.VITE_DEV === "true";
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
-  
 
-  const setToken = (token: string) => {
-    setAccessToken(token);
-    fetchUser();
-  };
-
-  const logout = async() => {
-    try{
-      await api.post("/login/logout",{})
-    } catch {
-      console.error("Não foi possível deslogar.");
-    }
-    clearAccessToken();
-    setUser(null);
-    window.location.href = "/login";
-  };
-
-  const fetchUser = async () => {
+  const reloadUser = async () => {
     try {
       setLoadingUser(true);
-      const res = await api.get<User>("/login/me");
-      setUser(res.data);
+
+      // se não houver usuário logado, getCurrentUser lança erro
+      const { userId } = await getCurrentUser();
+      const attrs = await fetchUserAttributes();
+
+      const mappedUser: User = {
+        id: userId,
+        nome: attrs.name,
+        email: attrs.email,
+        profile_image: attrs.picture,
+        ...attrs,
+      };
+
+      setUser(mappedUser);
     } catch (err) {
-      console.error("Erro ao buscar dados do usuário:", err);
+      // não logado ou erro -> user = null
+      console.error("Erro ao buscar usuário Cognito:", err);
       setUser(null);
     } finally {
       setLoadingUser(false);
     }
   };
 
+  const getToken = async () => {
+    try {
+      const session = await fetchAuthSession();
+      // escolha qual token você quer usar
+      return session.tokens?.idToken?.toString() ?? null;
+      // ou: session.tokens?.accessToken?.toString()
+    } catch (err) {
+      console.error("Erro ao obter token:", err);
+      return null;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut();
+    } catch (err) {
+      console.error("Erro ao deslogar do Cognito:", err);
+    }
+    setUser(null);
+    window.location.href = "/login";
+  };
+
   useEffect(() => {
-    // if (isDev && !getAccessToken()) {
-    //     const fakeToken = "fake-dev-token";
-    //     const fakeUser = { id: "1", nome: "Usuário Dev", email: "demo@local.com" };
-
-    //     setAccessToken(fakeToken);
-    //     setUser(fakeUser);
-    //     setLoadingUser(false);
-    //     return;
-    // }
-
-    fetchUser();
+    reloadUser();
   }, []);
 
   const value = useMemo(
-    () => ({ user, setUser, loadingUser, setToken, logout }),
+    () => ({ user, setUser, loadingUser, reloadUser, getToken, logout }),
     [user, loadingUser]
   );
 
@@ -78,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro de AuthProvider");
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth deve ser usado dentro de AuthProvider");
+  return ctx;
 };

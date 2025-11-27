@@ -8,6 +8,7 @@ import { ScrollToTop } from "../components/common/ScrollToTop";
 import Home from "../pages/Home/Home";
 import SignIn from "../pages/SignIn/SignIn";
 import SignUp from "../pages/SignUp/SignUp";
+import ConfirmSignUp from "../pages/SignUp/ConfirmSignUp";
 import NotFound from "../pages/OtherPage/NotFound";
 import Movies from "../pages/Movies/Movies";
 
@@ -35,7 +36,8 @@ function AppRoutes() {
       element: <NonUserRoute />,
       children: [
         { path: "login", element: <SignIn /> },
-        { path: "signup", element: <SignUp /> }
+        { path: "signup", element: <SignUp /> },
+        { path: "confirm-signup", element: <ConfirmSignUp /> }
       ],
     },
 

@@ -50,12 +50,18 @@ const ItemsGrid: React.FC<ItemsGridProps> = ({ items }) => {
           "
         >
           <div className="relative w-full overflow-hidden rounded-md aspect-2/3">
+          {item.cover_url ? (
             <img
-              src={item.coverUrl}
+              src={item.cover_url}
               alt={item.title}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"
             />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+              {item.title}
+            </div>
+          )}
           </div>
 
           <div className="mt-1 flex flex-col gap-0.5">

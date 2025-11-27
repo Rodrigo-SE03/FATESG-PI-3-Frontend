@@ -6,17 +6,15 @@ const ProtectedRoute = () => {
   const { user, loadingUser } = useAuth();
   const location = useLocation();
 
-  // TODO - Descomentar após implementar a lógica de autenticação
+  if (loadingUser) return (
+    <div className="fixed inset-0 flex items-center justify-center">
+      <LoadingSpinner size={50} text="Carregando" />
+    </div>
+  );
 
-  // if (loadingUser) return (
-  //   <div className="fixed inset-0 flex items-center justify-center">
-  //     <LoadingSpinner size={50} text="Carregando" />;
-  //   </div>
-  // );
-
-  // if (!user) {
-  //   return <Navigate to="/login" state={{ from: location }} replace />;
-  // }
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   return <Outlet />;
 };

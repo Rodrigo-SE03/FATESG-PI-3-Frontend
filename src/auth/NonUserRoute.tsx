@@ -8,7 +8,7 @@ const NonUserRoute = () => {
   
   if (loadingUser) return (
     <div className="fixed inset-0 flex items-center justify-center">
-      <LoadingSpinner size={50} text="Carregando" />;
+      <LoadingSpinner size={50} text="Carregando" />
     </div>
   );
 
