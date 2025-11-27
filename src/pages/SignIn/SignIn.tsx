@@ -4,6 +4,7 @@ import Button from "../../components/ui/button/Button";
 import api from "../../auth/Api";
 
 const SignIn = () => {
+  localStorage.setItem("theme", "dark");
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -13,7 +14,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="h-[100vh] flex flex-col items-center justify-center bg-gray-600 px-4">
+    <div className="h-screen flex flex-col items-center justify-center bg-gray-600 px-4">
       <div className="p-6 borderborder-dark-border rounded-2xl bg-dark-bg-alt text-dark-text mx-auto max-w-lg w-full">
         <h3 className="title-text text-2xl">Entrar</h3>
         <form className="flex flex-col gap-1 mt-4" onSubmit={handleSubmit}>

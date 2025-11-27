@@ -803,11 +803,11 @@ span.flatpickr-weekday,
 }
 
 @utility menu-item-active {
-  @apply bg-brand-50 text-brand-500 dark:bg-white/70;
+  @apply bg-brand-50 text-brand-900 dark:bg-white/80;
 }
 
 @utility menu-item-inactive {
-  @apply text-gray-300 dark:text-gray-200 hover:bg-gray-100 hover:text-brand-700 dark:hover:text-brand-600 group-hover:text-gray-700 dark:hover:bg-white/70;
+  @apply text-gray-300 dark:text-gray-200 hover:bg-gray-100 hover:text-brand-900 dark:hover:text-brand-900 group-hover:text-gray-700 dark:hover:bg-white/70;
 }
 
 @utility menu-item-icon-active {

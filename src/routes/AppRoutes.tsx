@@ -9,6 +9,7 @@ import Home from "../pages/Home/Home";
 import SignIn from "../pages/SignIn/SignIn";
 import SignUp from "../pages/SignUp/SignUp";
 import NotFound from "../pages/OtherPage/NotFound";
+import Movies from "../pages/Movies/Movies";
 
 function AppRoutes() {
 
@@ -22,6 +23,7 @@ function AppRoutes() {
           element: <> <ScrollToTop /> <AppLayout /> </>,
           children: [
             { index: true, element: <Home /> },
+            { path: "movies", element: <Movies /> },
           ],
         },
       ],
@@ -32,7 +34,6 @@ function AppRoutes() {
       path: "/",
       element: <NonUserRoute />,
       children: [
-        { index: true, element: <Home /> },
         { path: "login", element: <SignIn /> },
         { path: "signup", element: <SignUp /> }
       ],

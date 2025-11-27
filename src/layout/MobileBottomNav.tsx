@@ -80,12 +80,14 @@ const MobileBottomNav: React.FC = () => {
     <nav
       className="
         fixed bottom-0 left-0 right-0 z-40
+        w-full
         flex items-center gap-2
         bg-light-bg/95 dark:bg-dark-bg/95
         border-t border-light-border dark:border-dark-border
         backdrop-blur
         px-3 py-2
         sm:hidden
+        overflow-x-hidden
       "
     >
       {/* Botão para abrir o menu lateral mobile (drawer) */}
@@ -100,23 +102,22 @@ const MobileBottomNav: React.FC = () => {
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* Área de navegação: principal | | outros */}
-      <div className="flex-1 flex items-center justify-between">
+      {/* Área de navegação: principais (scroll) | divisor | others fixo */}
+      <div className="flex-1 flex items-center min-w-0">
         {/* Grupo principal com scroll horizontal */}
-        <div className="flex-1 overflow-x-auto">
-          <div className="flex flex-1 items-center justify-evenly gap-4 px-2 whitespace-nowrap">
+        <div className="flex-1 overflow-x-auto no-scrollbar min-w-0">
+          {/* TODO - Trocar o justify-evenly por justify-start quando tiver mais páginas */}
+          <div className="flex items-center justify-evenly gap-4 px-2 whitespace-nowrap">
             {primaryItems.map(renderFooterItem)}
           </div>
         </div>
 
         {/* Divisor vertical */}
-        <div className="h-8 w-px bg-light-border dark:bg-dark-border shrink-0" />
+        <div className="h-8 w-px bg-light-border dark:bg-dark-border mx-2 shrink-0" />
 
-        {/* Grupo Others com scroll horizontal + borda à esquerda */}
-        <div className="shrink ml-2">
-          <div className="flex items-center justify-evenly gap-4 px-2 whitespace-nowrap">
-            {otherItems.map(renderFooterItem)}
-          </div>
+        {/* Grupo Others fixo à direita, sem scroll */}
+        <div className="flex items-center gap-3 shrink-0">
+          {otherItems.map(renderFooterItem)}
         </div>
       </div>
     </nav>

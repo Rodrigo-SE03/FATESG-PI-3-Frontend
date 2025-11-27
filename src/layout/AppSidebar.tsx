@@ -10,6 +10,7 @@ import {
   Sun,
   Film,
   Book,
+  Origami,
   Gamepad2,
   CircleUser, 
   Ellipsis, 
@@ -45,7 +46,12 @@ export const navItems: NavItem[] = [
     icon: <Gamepad2 />,
     name: "Jogos",
     path: "/games",
-  }
+  },
+  {
+    icon: <Origami />,
+    name: "Animes",
+    path: "/animes",
+  },
 ];
 
 export const othersItems: NavItem[] = [

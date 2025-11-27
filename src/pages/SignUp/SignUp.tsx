@@ -6,6 +6,7 @@ import { useState } from "react";
 import api from "../../auth/Api";
 
 const SignUp = () => {
+  localStorage.setItem("theme", "dark");
   const [gender, setGender] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
