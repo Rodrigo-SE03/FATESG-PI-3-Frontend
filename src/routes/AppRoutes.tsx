@@ -10,7 +10,11 @@ import SignIn from "../pages/SignIn/SignIn";
 import SignUp from "../pages/SignUp/SignUp";
 import ConfirmSignUp from "../pages/SignUp/ConfirmSignUp";
 import NotFound from "../pages/OtherPage/NotFound";
+import WorkDetails from "../pages/Work/WorkDetails";
 import Movies from "../pages/Movies/Movies";
+import MoviesAdd from "../pages/Movies/MoviesAdd";
+import Animes from "../pages/Animes/Animes";
+import AnimesAdd from "../pages/Animes/AnimesAdd";
 
 function AppRoutes() {
 
@@ -24,7 +28,11 @@ function AppRoutes() {
           element: <> <ScrollToTop /> <AppLayout /> </>,
           children: [
             { index: true, element: <Home /> },
-            { path: "movies", element: <Movies /> },
+            { path: "filmes", element: <Movies /> },
+            { path: "filmes/add", element: <MoviesAdd /> },
+            { path: "animes", element: <Animes /> },
+            { path: "animes/add", element: <AnimesAdd /> },
+            { path: "work/:id", element: <WorkDetails />},
           ],
         },
       ],

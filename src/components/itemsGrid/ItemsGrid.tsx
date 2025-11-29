@@ -1,6 +1,7 @@
 import React from "react";
 import type { WorkItem } from "../../types/works";
 import { Star, StarHalf } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ItemsGridProps {
   items: WorkItem[];
@@ -9,6 +10,12 @@ interface ItemsGridProps {
 const MAX_STARS = 5;
 
 const ItemsGrid: React.FC<ItemsGridProps> = ({ items }) => {
+  const navigate = useNavigate();
+
+  if (items.length === 0) {
+    return <p className="text-center">Nenhum item encontrado.</p>;
+  }
+
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center justify-center gap-0.5">
@@ -47,7 +54,11 @@ const ItemsGrid: React.FC<ItemsGridProps> = ({ items }) => {
             sm:w-1/4             /* 4 colunas no tablet */
             lg:w-1/6             /* 6 colunas no desktop */
             text-center
+            cursor-pointer
           "
+          onClick={() => {
+            navigate(`/work/${item.id}`, { state: { item } });
+          }}
         >
           <div className="relative w-full overflow-hidden rounded-md aspect-2/3">
           {item.cover_url ? (

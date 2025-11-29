@@ -38,17 +38,17 @@ export const navItems: NavItem[] = [
   {
     icon: <Film />,
     name: "Filmes",
-    path: "/movies",
+    path: "/filmes",
   },
   {
     icon: <Book />,
     name: "Livros",
-    path: "/books",
+    path: "/livros",
   },
   {
     icon: <Gamepad2 />,
     name: "Jogos",
-    path: "/games",
+    path: "/jogos",
   },
   {
     icon: <Origami />,
@@ -326,10 +326,10 @@ const AppSidebar: React.FC = () => {
       className={`fixed mt-0 flex flex-col lg:mt-0 top-0 px-5 left-0 sidebar-colors h-screen transition-all duration-300 ease-in-out z-50
         ${
           isExpanded || isMobileOpen
-            ? "w-[290px]"
+            ? "w-sidebar-expanded-width"
             // : isHovered
             // ? "w-[290px]"
-            : "w-[90px]"
+            : "w-sidebar-collapsed-width"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}

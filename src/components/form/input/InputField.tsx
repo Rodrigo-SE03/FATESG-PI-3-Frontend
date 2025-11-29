@@ -73,6 +73,18 @@ const Input: FC<InputProps> = ({
     inputClasses = `appearance-none ${inputClasses}`;
   }
 
+  const dateExtraClasses = isDate
+    ? `
+      pr-10
+      [&::-webkit-calendar-picker-indicator]:opacity-0
+      [&::-webkit-calendar-picker-indicator]:absolute
+      [&::-webkit-calendar-picker-indicator]:right-3
+      [&::-webkit-calendar-picker-indicator]:h-full
+      [&::-webkit-calendar-picker-indicator]:w-6
+      [&::-webkit-calendar-picker-indicator]:cursor-pointer
+    `
+    : "";
+
   return (
     <div className="relative text-light-text dark:text-dark-text">
       <input
@@ -91,13 +103,7 @@ const Input: FC<InputProps> = ({
         disabled={disabled}
         className={`
           ${inputClasses}
-          pr-10
-          [&::-webkit-calendar-picker-indicator]:opacity-0
-          [&::-webkit-calendar-picker-indicator]:absolute
-          [&::-webkit-calendar-picker-indicator]:right-3
-          [&::-webkit-calendar-picker-indicator]:h-full
-          [&::-webkit-calendar-picker-indicator]:w-6
-          [&::-webkit-calendar-picker-indicator]:cursor-pointer
+          ${dateExtraClasses}
         `}
         
         ref={inputRef}

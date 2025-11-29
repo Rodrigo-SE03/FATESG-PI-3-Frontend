@@ -20,6 +20,8 @@ layer(base);
   --breakpoint-2xl: 1536px;
 
   --spacing-header-height: 55px;
+  --spacing-sidebar-expanded-width: 290px;
+  --spacing-sidebar-collapsed-width: 90px;
 
   --text-title-2xl: 72px;
   --text-title-2xl--line-height: 90px;
