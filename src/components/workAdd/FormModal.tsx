@@ -7,6 +7,7 @@ import Input from "../form/input/InputField";
 import Select from "../form/Select";
 import Label from "../form/Label";
 import StarRating from "./StarRating";
+import { is } from "date-fns/locale";
 
 type FormModalProps = {
   item: WorkItem;
@@ -72,7 +73,7 @@ const FormModal: React.FC<FormModalProps> = ({ item, onClose, onSubmit, onEdit, 
     // aqui é só o conteúdo do modal, sem fixed/inset/overlay
     <div className="p-6">
       <h2 className="mb-4">
-        Adicionar <span className="font-semibold">{item.title}</span> à sua coleção
+        {isEdit ? "Editar" : "Adicionar"} <span className="font-semibold">{item.title}</span>
       </h2>
 
       {/* Status */}
