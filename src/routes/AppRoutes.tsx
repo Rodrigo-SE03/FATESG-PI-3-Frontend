@@ -15,6 +15,10 @@ import Movies from "../pages/Movies/Movies";
 import MoviesAdd from "../pages/Movies/MoviesAdd";
 import Animes from "../pages/Animes/Animes";
 import AnimesAdd from "../pages/Animes/AnimesAdd";
+import Books from "../pages/Books/Books";
+import BooksAdd from "../pages/Books/BooksAdd";
+import Games from "../pages/Games/Games";
+import GamesAdd from "../pages/Games/GamesAdd";
 
 function AppRoutes() {
 
@@ -32,6 +36,10 @@ function AppRoutes() {
             { path: "filmes/add", element: <MoviesAdd /> },
             { path: "animes", element: <Animes /> },
             { path: "animes/add", element: <AnimesAdd /> },
+            { path: "livros", element: <Books /> },
+            { path: "livros/add", element: <BooksAdd /> },
+            { path: "jogos", element: <Games /> },
+            { path: "jogos/add", element: <GamesAdd /> },
             { path: "work/:id", element: <WorkDetails />},
           ],
         },

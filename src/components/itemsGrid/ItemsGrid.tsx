@@ -53,6 +53,7 @@ const ItemsGrid: React.FC<ItemsGridProps> = ({ items }) => {
             w-1/3 px-1 mb-3      /* 3 colunas no mobile */
             sm:w-1/4             /* 4 colunas no tablet */
             lg:w-1/6             /* 6 colunas no desktop */
+            xl:w-1/8            /* 8 colunas em telas maiores */
             text-center
             cursor-pointer
           "

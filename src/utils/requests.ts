@@ -1,10 +1,9 @@
 import api from "../auth/Api";
-import { AddPayload } from "../types/works";
+import { AddPayload, UpdatePayload } from "../types/works";
 
 export const fetchWorks = async (type: string) => {
   try {
     const response = await api.get(`/catalog?categoria=${type}`);
-    console.log(`Fetched ${type}:`, response.data);
     return response.data;
   } catch (error) {
     console.error(`Error fetching ${type}:`, error);
@@ -15,7 +14,6 @@ export const fetchWorks = async (type: string) => {
 export const removeWork = async (type: string, id: string) => {
   try {
     const response = await api.delete(`/catalog?category=${type}&id=${id}`);
-    console.log(`Removed ${type} with id ${id}:`, response.data);
     return response.data;
   } catch (error) {
     console.error(`Error removing ${type} with id ${id}:`, error);
@@ -33,10 +31,19 @@ export const addWork = async (data: AddPayload) => {
   }
 };
 
+export const editWork = async (data: UpdatePayload) => {
+  try {
+    const response = await api.patch(`/catalog`, data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error editing item:`, error);
+    throw error;
+  }
+};
+
 export const searchWorks = async (type: string, query: string) => {
   try {
     const response = await api.get(`/search?category=${type}&q=${encodeURIComponent(query)}`);
-    console.log(`Search results for ${type} with query "${query}":`, response.data);
     return response.data;
   } catch (error) {
     console.error(`Error searching ${type} with query "${query}":`, error);

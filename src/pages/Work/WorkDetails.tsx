@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams, Navigate } from "react-router-dom";
-import type { WorkItem, AddPayload } from "../../types/works";
+import type { WorkItem, AddPayload, UpdatePayload } from "../../types/works";
 import PageMeta from "../../components/common/PageMeta";
 import { capitalizeFirstLetter } from "../../utils/helperFuncs";
-import { fetchWorks, removeWork, addWork } from "../../utils/requests";
+import { fetchWorks, removeWork, addWork, editWork } from "../../utils/requests";
 import Toast from "../../components/common/Toast";
-import Button from "../../components/ui/button/Button";
 import { ToastData } from "../../components/common/Toast";
 import { CirclePlus, Pencil, Trash2, Calendar, Tag } from "lucide-react";
 import { Modal } from "../../components/ui/modal";
@@ -17,6 +16,8 @@ type LocationState = {
   item?: WorkItem;
 };
 
+const DESCRIPTION_LIMIT = 500;
+
 const WorkDetails: React.FC = () => {
   const [toastData, setToastData] = useState<ToastData | null>({
     open: false,
@@ -26,6 +27,7 @@ const WorkDetails: React.FC = () => {
   });
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [edit,setEdit] = useState(false);
 
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
@@ -35,10 +37,20 @@ const WorkDetails: React.FC = () => {
   const [checkingLibrary, setCheckingLibrary] = useState(true);
   const [alreadyInLibrary, setAlreadyInLibrary] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   console.log("WorkDetails item:", item);
   if (!item) {
     return <Navigate to="/catalog" replace />;
   }
+
+  const [expanded, setExpanded] = useState(false);
+  const isLong = (item?.description?.length ?? 0) > DESCRIPTION_LIMIT;
+
+  const displayedText = !item?.description
+    ? ""
+    : expanded
+      ? item.description
+      : item.description.slice(0, DESCRIPTION_LIMIT) + (isLong ? "..." : "");
 
   useEffect(() => {
     const checkIfInLibrary = async () => {
@@ -60,7 +72,51 @@ const WorkDetails: React.FC = () => {
 
   const typeLabel = capitalizeFirstLetter(item.category);
 
+  const metadataEntries = (() => {
+    const m = item.metadata;
+    if (!m) return [];
+
+    switch (item.category) {
+      case "filme":
+        return [
+          m.director && { label: "Direção", value: m.director },
+          m.duration && { label: "Duração", value: m.duration },
+        ].filter(Boolean) as { label: string; value: string | number }[];
+
+      case "livro":
+        return [
+          m.author && { label: "Autor", value: m.author },
+          m.editor && { label: "Editora", value: m.editor },
+          typeof m.pages === "number" && { label: "Páginas", value: m.pages },
+        ].filter(Boolean) as { label: string; value: string | number }[];
+
+      case "anime":
+        return [
+          typeof m.episodes === "number" && {
+            label: "Episódios",
+            value: m.episodes,
+          },
+        ].filter(Boolean) as { label: string; value: string | number }[];
+
+      case "jogo":
+        return [
+          m.platforms?.length && {
+            label: "Plataformas",
+            value: m.platforms.join(", "),
+          },
+          m.developer?.length && {
+            label: "Desenvolvedor",
+            value: m.developer.join(", "),
+          },
+        ].filter(Boolean) as { label: string; value: string | number }[];
+
+      default:
+        return [];
+    }
+  })();
+
   const handleAdd = async (payload: AddPayload) => {
+    setLoading(true);
     try {
       console.log("Adicionar item:", payload);
       await addWork(payload);
@@ -81,13 +137,35 @@ const WorkDetails: React.FC = () => {
         color: "error",
       });
     }
+    setLoading(false);
   };
 
-  const handleEdit = () => {
-    console.log("Editar item (TODO):", item.id);
+  const handleEdit = async (payload: UpdatePayload) => {
+    setLoading(true);
+    try {
+      console.log("Editar item:", payload);
+      await editWork(payload);
+      setModalOpen(false);
+      setToastData({
+        open: true,
+        title: "Atualizado",
+        message: `${item.title} foi atualizado.`,
+        color: "success",
+      });
+    } catch (error) {
+      console.error("Erro ao editar item na biblioteca:", error);
+      setToastData({
+        open: true,
+        title: "Erro",
+        message: `Não foi possível atualizar ${item.title} na sua coleção.`,
+        color: "error",
+      });
+    }
+    setLoading(false);
   };
 
   const handleRemove = async () => {
+    setLoading(true);
     try {
       console.log("Remover item (TODO):", item.id);
       await removeWork(item.category, item.id);
@@ -107,6 +185,7 @@ const WorkDetails: React.FC = () => {
         color: "error",
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -134,7 +213,10 @@ const WorkDetails: React.FC = () => {
               <div className="flex justify-between gap-6">
                 <button
                   type="button"
-                  onClick={handleEdit}
+                  onClick={() => {
+                    setEdit(true); 
+                    setModalOpen(true);
+                  }}
                 >
                   <Pencil className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </button>
@@ -184,9 +266,19 @@ const WorkDetails: React.FC = () => {
           )}
 
           {item.description && (
-            <p className="text-sm sm:text-base leading-relaxed text-light-text/90 dark:text-dark-text/90">
-              {item.description}
-            </p>
+            <div className="text-sm sm:text-base leading-relaxed text-light-text/90 dark:text-dark-text/90">
+              <p>{displayedText}</p>
+
+              {isLong && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded(!expanded)}
+                  className="text-primary font-medium hover:underline mt-1 text-blue-600 dark:text-blue-400"
+                >
+                  {expanded ? "Ler menos" : "Ler mais"}
+                </button>
+              )}
+            </div>
           )}
         </div>
         {item.unified_genres && item.unified_genres.length > 0 && (
@@ -204,6 +296,16 @@ const WorkDetails: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Metadata específica */}
+        <div className="mt-6 flex flex-wrap gap-4 text-sm text-light-text/90 dark:text-dark-text/90">
+        {metadataEntries.map((meta) => (
+          <span key={meta.label} className="inline-flex items-center gap-1">
+            <span className="font-semibold">{meta.label}:</span>
+            <span>{meta.value}</span>
+          </span>
+        ))}
+        </div>
       </div>
       <Modal
         isOpen={modalOpen}
@@ -213,8 +315,12 @@ const WorkDetails: React.FC = () => {
       >
         <FormModal
           item={item}
+          initialData={item}
           onClose={() => setModalOpen(false)}
           onSubmit={handleAdd}
+          onEdit={handleEdit}
+          isEdit={edit}
+          loading={loading}
         />
       </Modal>
 

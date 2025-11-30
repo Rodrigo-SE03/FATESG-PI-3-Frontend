@@ -1,6 +1,6 @@
 export type WorkType = "filme" | "anime" | "jogo" | "livro";
 
-export type Status = "Completo" | "Em andamento" | "Planejado";
+export type Status = "completed" | "in_progress" | "planned" | "abandoned";
 
 export type Metadata = {
   // Filmes
@@ -17,7 +17,8 @@ export type Metadata = {
   original_id?: string;
 
   // Jogos
-  platforms?: string;
+  platforms?: string[];
+  developer?: string[];
 };
 
 export interface WorkItem {
@@ -32,6 +33,7 @@ export interface WorkItem {
   progress?: number;
   release_year?: number;
   genres?: string[];
+  review?: string;
   unified_genres?: string[];
   last_updated?: string;
 };
@@ -42,6 +44,15 @@ export type AddPayload = {
   title: string;
   status: Status;
   rating: number;
+  progress?: number;
+  review?: string;
+};
+
+export type UpdatePayload = {
+  id: string;
+  category: WorkType;
+  status?: Status;
+  rating?: number;
   progress?: number;
   review?: string;
 };
