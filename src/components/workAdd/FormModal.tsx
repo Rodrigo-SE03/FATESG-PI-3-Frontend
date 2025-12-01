@@ -7,7 +7,6 @@ import Input from "../form/input/InputField";
 import Select from "../form/Select";
 import Label from "../form/Label";
 import StarRating from "./StarRating";
-import { is } from "date-fns/locale";
 
 type FormModalProps = {
   item: WorkItem;

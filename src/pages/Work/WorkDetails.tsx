@@ -32,7 +32,9 @@ const WorkDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const state = location.state as LocationState | null;
-  const item = state?.item;
+  const [item, setItem] = useState<WorkItem | null>(
+    state?.item || null
+  );
 
   const [checkingLibrary, setCheckingLibrary] = useState(true);
   const [alreadyInLibrary, setAlreadyInLibrary] = useState(false);
@@ -128,6 +130,7 @@ const WorkDetails: React.FC = () => {
         message: `${item.title} foi adicionado à sua coleção.`,
         color: "success",
       });
+      setItem((prevItem) => prevItem ? { ...prevItem, ...payload } : prevItem);
     } catch (error) {
       console.error("Erro ao adicionar item à biblioteca:", error);
       setToastData({
@@ -152,6 +155,7 @@ const WorkDetails: React.FC = () => {
         message: `${item.title} foi atualizado.`,
         color: "success",
       });
+      setItem((prevItem) => prevItem ? { ...prevItem, ...payload } : prevItem);
     } catch (error) {
       console.error("Erro ao editar item na biblioteca:", error);
       setToastData({
@@ -306,6 +310,18 @@ const WorkDetails: React.FC = () => {
           </span>
         ))}
         </div>
+
+        {/* Avaliação do usuário, caso exista */}
+        {item.review && (
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold mb-2 text-light-text dark:text-dark-text">
+              Sua Avaliação
+            </h2>
+            <p className="text-sm text-light-text/90 dark:text-dark-text/90">
+              {item.review}
+            </p>
+          </div>
+        )}
       </div>
       <Modal
         isOpen={modalOpen}
