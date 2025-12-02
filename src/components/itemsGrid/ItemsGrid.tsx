@@ -2,6 +2,7 @@ import React from "react";
 import type { WorkItem } from "../../types/works";
 import { Star, StarHalf } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ItemThumb from "./ItemThumb";
 
 interface ItemsGridProps {
   items: WorkItem[];
@@ -46,46 +47,15 @@ const ItemsGrid: React.FC<ItemsGridProps> = ({ items }) => {
   return (
     <div className="flex flex-wrap -mx-1">
       {items.map((item) => (
-        <div
-          key={item.id}
-          className="
-            flex flex-col
+        <ItemThumb
+          item={item}
+          containerClassName="
             w-1/3 px-1 mb-3      /* 3 colunas no mobile */
             sm:w-1/4             /* 4 colunas no tablet */
             lg:w-1/6             /* 6 colunas no desktop */
-            xl:w-1/8            /* 8 colunas em telas maiores */
-            text-center
-            cursor-pointer
+            xl:w-1/8             /* 8 colunas em telas maiores */
           "
-          onClick={() => {
-            navigate(`/work/${item.id}`, { state: { item } });
-          }}
-        >
-          <div className="relative w-full overflow-hidden rounded-md aspect-2/3">
-          {item.cover_url ? (
-            <img
-              src={item.cover_url}
-              alt={item.title}
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-              {item.title}
-            </div>
-          )}
-          </div>
-
-          <div className="mt-1 flex flex-col gap-0.5">
-            {renderStars(item.rating)}
-            <span
-              className="text-[0.8rem] font-medium leading-tight truncate"
-              title={item.title}
-            >
-              {item.title}
-            </span>
-          </div>
-        </div>
+        />
       ))}
     </div>
   );

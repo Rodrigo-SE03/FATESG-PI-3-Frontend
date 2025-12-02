@@ -11,6 +11,9 @@ import { Modal } from "../../components/ui/modal";
 import FormModal from "../../components/workAdd/FormModal";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { Star, StarHalf } from "lucide-react";
+
+const MAX_STARS = 5;
 
 type LocationState = {
   item?: WorkItem;
@@ -40,7 +43,6 @@ const WorkDetails: React.FC = () => {
   const [alreadyInLibrary, setAlreadyInLibrary] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  console.log("WorkDetails item:", item);
   if (!item) {
     return <Navigate to="/catalog" replace />;
   }
@@ -54,23 +56,25 @@ const WorkDetails: React.FC = () => {
       ? item.description
       : item.description.slice(0, DESCRIPTION_LIMIT) + (isLong ? "..." : "");
 
-  useEffect(() => {
-    const checkIfInLibrary = async () => {
-      try {
-        setCheckingLibrary(true);
-        const { items } = await fetchWorks(item.category);
-        const exists = items.some((work: WorkItem) => work.id === item.id);
-        setAlreadyInLibrary(exists);
-      } catch (error) {
-        console.error("Erro ao verificar biblioteca do usuário:", error);
-        setAlreadyInLibrary(false);
-      } finally {
-        setCheckingLibrary(false);
-      }
-    };
+  
+  const checkIfInLibrary = async () => {
+    try {
+      setCheckingLibrary(true);
+      const { items } = await fetchWorks(item.category);
+      const exists = items.some((work: WorkItem) => work.id === item.id);
+      setAlreadyInLibrary(exists);
+    } catch (error) {
+      console.error("Erro ao verificar biblioteca do usuário:", error);
+      setAlreadyInLibrary(false);
+    } finally {
+      setCheckingLibrary(false);
+    }
+  };
 
+  useEffect(() => {
+    console.log("Item:", item); 
     checkIfInLibrary();
-  }, [item]);
+  }, [item,alreadyInLibrary]);
 
   const typeLabel = capitalizeFirstLetter(item.category);
 
@@ -101,14 +105,16 @@ const WorkDetails: React.FC = () => {
         ].filter(Boolean) as { label: string; value: string | number }[];
 
       case "jogo":
+        const platforms = m.platform?.split(",").map(p => p.trim()) || [];
+        const developers = m.developers?.split(",").map(d => d.trim()) || [];
         return [
-          m.platforms?.length && {
+          platforms.length && {
             label: "Plataformas",
-            value: m.platforms.join(", "),
+            value: platforms.join(", "),
           },
-          m.developer?.length && {
+          developers.length && {
             label: "Desenvolvedor",
-            value: m.developer.join(", "),
+            value: developers.join(", "),
           },
         ].filter(Boolean) as { label: string; value: string | number }[];
 
@@ -120,9 +126,8 @@ const WorkDetails: React.FC = () => {
   const handleAdd = async (payload: AddPayload) => {
     setLoading(true);
     try {
-      console.log("Adicionar item:", payload);
       await addWork(payload);
-      setAlreadyInLibrary(true);
+      checkIfInLibrary();
       setModalOpen(false);
       setToastData({
         open: true,
@@ -146,7 +151,6 @@ const WorkDetails: React.FC = () => {
   const handleEdit = async (payload: UpdatePayload) => {
     setLoading(true);
     try {
-      console.log("Editar item:", payload);
       await editWork(payload);
       setModalOpen(false);
       setToastData({
@@ -171,7 +175,6 @@ const WorkDetails: React.FC = () => {
   const handleRemove = async () => {
     setLoading(true);
     try {
-      console.log("Remover item (TODO):", item.id);
       await removeWork(item.category, item.id);
       setAlreadyInLibrary(false);
       setToastData({
@@ -190,6 +193,30 @@ const WorkDetails: React.FC = () => {
       });
     }
     setLoading(false);
+  };
+
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex items-center justify-center gap-0.5">
+        {Array.from({ length: MAX_STARS }).map((_, i) => {
+          const starValue = i + 1;
+          const halfValue = i + 0.5;
+
+          let Icon = Star;
+          let className = "h-3 w-3 text-gray-400";
+
+          if (rating >= starValue) {
+            Icon = Star;
+            className = "h-3 w-3 text-yellow-400 fill-yellow-400";
+          } else if (rating >= halfValue) {
+            Icon = StarHalf;
+            className = "h-3 w-3 text-yellow-400 fill-yellow-400";
+          }
+
+          return <Icon key={i} className={className} />;
+        })}
+      </div>
+    );
   };
 
   return (
@@ -245,6 +272,12 @@ const WorkDetails: React.FC = () => {
             <h1 className="mb-2 text-2xl sm:text-3xl font-semibold leading-tight text-light-text dark:text-dark-text break-words">
               {item.title}
             </h1>
+
+            {item.rating !== undefined && (
+            <div className="mb-2 flex justify-start">
+              {renderStars(item.rating)}
+            </div>
+            )}
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-light-text/80 dark:text-dark-text/80">
               {item.release_year && (
