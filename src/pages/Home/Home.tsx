@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Star, StarHalf } from "lucide-react";
 
 import PageMeta from "../../components/common/PageMeta";
 import { useSidebar } from "../../context/SidebarContext";
@@ -17,11 +15,8 @@ const CATEGORIES: { type: WorkType; label: string }[] = [
 
 type CategoryData = Record<WorkType, WorkItem[]>;
 
-const MAX_STARS = 5;
-
 const Home = () => {
   const { isExpanded } = useSidebar();
-  const navigate = useNavigate();
 
   const [data, setData] = useState<CategoryData>({
     filme: [],
@@ -59,30 +54,6 @@ const Home = () => {
 
     loadData();
   }, []);
-
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center justify-center gap-0.5">
-        {Array.from({ length: MAX_STARS }).map((_, i) => {
-          const starValue = i + 1;
-          const halfValue = i + 0.5;
-
-          let Icon = Star;
-          let className = "h-3 w-3 text-gray-400";
-
-          if (rating >= starValue) {
-            Icon = Star;
-            className = "h-3 w-3 text-yellow-400 fill-yellow-400";
-          } else if (rating >= halfValue) {
-            Icon = StarHalf;
-            className = "h-3 w-3 text-yellow-400 fill-yellow-400";
-          }
-
-          return <Icon key={i} className={className} />;
-        })}
-      </div>
-    );
-  };
 
   const getRecentItems = (items: WorkItem[]) => {
     return [...items]

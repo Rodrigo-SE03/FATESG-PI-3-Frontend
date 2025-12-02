@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
-import { useThemeClass } from "../hooks/useThemeClass";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 
@@ -16,10 +15,10 @@ import {
   CircleUser, 
   Ellipsis, 
   ChevronDown,
+  Star,
   LogOut
 } from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
-import { el } from "date-fns/locale";
 
 export type NavItem = {
   name: string;
@@ -55,6 +54,11 @@ export const navItems: NavItem[] = [
     name: "Animes",
     path: "/animes",
   },
+  {
+    icon: <Star />,
+    name: "Recomendações",
+    path: "/recomendacoes",
+  }
 ];
 
 export const othersItems: NavItem[] = [

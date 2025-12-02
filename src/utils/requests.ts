@@ -50,3 +50,13 @@ export const searchWorks = async (type: string, query: string) => {
     throw error;
   }
 };
+
+export const getRecommendationsByUser = async (type: string) => {
+  try {
+    const response = await api.get(`/recommendations/user?target_category=${type}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching recommendations:`, error);
+    throw error;
+  }
+};
