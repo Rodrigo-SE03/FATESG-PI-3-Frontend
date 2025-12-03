@@ -1,9 +1,9 @@
 import api from "../auth/Api";
 import { AddPayload, UpdatePayload } from "../types/works";
 
-export const fetchWorks = async (type: string) => {
+export const fetchWorks = async (type?: string, limit?:number) => {
   try {
-    const response = await api.get(`/catalog?categoria=${type}`);
+    const response = await api.get(`/catalog?${type ? `categoria=${type}` : ""}${limit ? `&limit=${limit}` : ""}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching ${type}:`, error);

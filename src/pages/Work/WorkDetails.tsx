@@ -72,7 +72,6 @@ const WorkDetails: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("Item:", item); 
     checkIfInLibrary();
   }, [item,alreadyInLibrary]);
 

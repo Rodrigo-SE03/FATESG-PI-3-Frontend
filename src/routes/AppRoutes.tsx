@@ -3,6 +3,8 @@ import ProtectedRoute from "../auth/ProtectedRoute";
 import NonUserRoute from "../auth/NonUserRoute";
 import AppLayout from "../layout/AppLayout";
 import { ScrollToTop } from "../components/common/ScrollToTop";
+import { CatalogProvider } from "../context/CatalogContext";
+import { WorkAddSearchProvider } from "../context/WorkAddSearchContext";
 
 // Páginas
 import Home from "../pages/Home/Home";
@@ -30,19 +32,25 @@ function AppRoutes() {
       element: <ProtectedRoute />,
       children: [
         {
-          element: <> <ScrollToTop /> <AppLayout /> </>,
+          element: 
+            <CatalogProvider>
+              <WorkAddSearchProvider>
+                <ScrollToTop />
+                <AppLayout />
+              </WorkAddSearchProvider>
+            </CatalogProvider>,
           children: [
             { index: true, element: <Home /> },
-            { path: "filmes", element: <Movies /> },
-            { path: "filmes/add", element: <MoviesAdd /> },
-            { path: "animes", element: <Animes /> },
-            { path: "animes/add", element: <AnimesAdd /> },
-            { path: "livros", element: <Books /> },
-            { path: "livros/add", element: <BooksAdd /> },
-            { path: "jogos", element: <Games /> },
-            { path: "jogos/add", element: <GamesAdd /> },
+            { path: "filmes", element: <CatalogProvider><Movies /></CatalogProvider> },
+            { path: "filmes/add", element: <WorkAddSearchProvider><MoviesAdd /></WorkAddSearchProvider> },
+            { path: "animes", element: <CatalogProvider><Animes /></CatalogProvider> },
+            { path: "animes/add", element: <WorkAddSearchProvider><AnimesAdd /></WorkAddSearchProvider> },
+            { path: "livros", element: <CatalogProvider><Books /></CatalogProvider> },
+            { path: "livros/add", element: <WorkAddSearchProvider><BooksAdd /></WorkAddSearchProvider> },
+            { path: "jogos", element: <CatalogProvider><Games /></CatalogProvider> },
+            { path: "jogos/add", element: <WorkAddSearchProvider><GamesAdd /></WorkAddSearchProvider> },
             { path: "recomendacoes", element: <Recommendation /> },
-            { path: "work/:id", element: <WorkDetails />},
+            { path: "work/:id", element: <WorkAddSearchProvider><CatalogProvider><WorkDetails /></CatalogProvider></WorkAddSearchProvider>},
           ],
         },
       ],

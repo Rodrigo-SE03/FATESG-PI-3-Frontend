@@ -55,7 +55,7 @@ export const navItems: NavItem[] = [
     path: "/animes",
   },
   {
-    icon: <Star className="icon-size text-yellow-400" />,
+    icon: <Star className="icon-size text-yellow-500" />,
     name: "Recomendações",
     path: "/recomendacoes",
   }

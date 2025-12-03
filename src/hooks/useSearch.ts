@@ -1,36 +1,76 @@
-import { useState } from "react";
 import type { WorkItem } from "../types/works";
 import { searchWorks } from "../utils/requests";
 import type { WorkType } from "../types/works";
+import { useWorkAddSearchContext } from "../context/WorkAddSearchContext";
 
 type UseWorkSearchOptions = {
   workType: WorkType;
 };
 
+const defaultSlice = (): {
+  query: string;
+  results: WorkItem[];
+  loading: boolean;
+  hasSearched: boolean;
+  error: string | null;
+} => ({
+  query: "",
+  results: [],
+  loading: false,
+  hasSearched: false,
+  error: null,
+});
+
 export function useWorkSearch({ workType }: UseWorkSearchOptions) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<WorkItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { state, setState } = useWorkAddSearchContext();
+
+  const slice = state[workType] ?? defaultSlice();
+  const { query, results, loading, hasSearched, error } = slice;
+
+  const updateSlice = (partial: Partial<typeof slice>) => {
+    setState((prev) => {
+      const prevSlice = prev[workType] ?? defaultSlice();
+      return {
+        ...prev,
+        [workType]: {
+          ...prevSlice,
+          ...partial,
+        },
+      };
+    });
+  };
+
+  const setQuery = (value: string) => {
+    updateSlice({ query: value });
+  };
+
+  const setError = (value: string | null) => {
+    updateSlice({ error: value });
+  };
 
   const runSearch = async () => {
     const trimmed = query.trim();
     if (!trimmed) return;
 
-    setLoading(true);
-    setHasSearched(true);
-    setError(null);
+    updateSlice({
+      loading: true,
+      hasSearched: true,
+      error: null,
+    });
 
     try {
       const result = await searchWorks(workType, trimmed);
-      setResults(result);
+      updateSlice({
+        results: result,
+      });
     } catch (err) {
       console.error("Error searching works:", err);
-      setError("Não foi possível buscar os itens agora.");
-      setResults([]);
+      updateSlice({
+        error: "Não foi possível buscar os itens agora.",
+        results: [],
+      });
     } finally {
-      setLoading(false);
+      updateSlice({ loading: false });
     }
   };
 

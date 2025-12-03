@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { WorkItem } from "../types/works";
 import { fetchWorks } from "../utils/requests";
 import { WorkType } from "../types/works";
+import { useCatalogContext } from "../context/CatalogContext";
 
 type UseCatalogOptions = {
-  workType: WorkType;                       
+  workType: WorkType;
   mockItems?: WorkItem[];
   filterFn?: (item: WorkItem, term: string) => boolean;
 };
@@ -14,35 +15,84 @@ export function useCatalog({
   mockItems = [],
   filterFn,
 }: UseCatalogOptions) {
+  const { catalogs, setCatalogs } = useCatalogContext();
+
+  // “slot” atual desse tipo de mídia
+  const slice = catalogs[workType] ?? { items: [], searchTerm: "" };
+  const { items, searchTerm } = slice;
+
   const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState<WorkItem[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+
+  // atualiza searchTerm só desse workType
+  const setSearchTerm = (value: string) => {
+    setCatalogs((prev) => {
+      const prevSlice = prev[workType] ?? { items: [], searchTerm: "" };
+      return {
+        ...prev,
+        [workType]: {
+          ...prevSlice,
+          searchTerm: value,
+        },
+      };
+    });
+  };
 
   useEffect(() => {
     const load = async () => {
+      // já tenho itens para esse tipo? então só marco como carregado
+      if (items.length > 0) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const { items } = await fetchWorks(workType);
-        setItems(items);
+        const { items: fetchedItems } = await fetchWorks(workType);
+
+        setCatalogs((prev) => {
+          const prevSlice = prev[workType] ?? { items: [], searchTerm: "" };
+          return {
+            ...prev,
+            [workType]: {
+              ...prevSlice,
+              items: fetchedItems,
+            },
+          };
+        });
       } catch (error) {
         console.error(`Error fetching works (${workType}):`, error);
-        setItems(mockItems);
+
+        setCatalogs((prev) => {
+          const prevSlice = prev[workType] ?? { items: [], searchTerm: "" };
+          return {
+            ...prev,
+            [workType]: {
+              ...prevSlice,
+              items: mockItems,
+            },
+          };
+        });
       } finally {
         setLoading(false);
       }
     };
 
-    load();
-  }, [workType]);
+    setLoading(true);
+    void load();
+  }, [workType, items.length, mockItems, setCatalogs]);
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
 
-  const filteredItems = normalizedSearch
-    ? items.filter((item) =>
-        filterFn
-          ? filterFn(item, normalizedSearch)
-          : item.title.toLowerCase().includes(normalizedSearch)
-      )
-    : items;
+  const filteredItems = useMemo(
+    () =>
+      normalizedSearch
+        ? items.filter((item) =>
+            filterFn
+              ? filterFn(item, normalizedSearch)
+              : item.title.toLowerCase().includes(normalizedSearch)
+          )
+        : items,
+    [items, normalizedSearch, filterFn]
+  );
 
   return {
     loading,
