@@ -5,6 +5,7 @@ import AppLayout from "../layout/AppLayout";
 import { ScrollToTop } from "../components/common/ScrollToTop";
 import { CatalogProvider } from "../context/CatalogContext";
 import { WorkAddSearchProvider } from "../context/WorkAddSearchContext";
+import { RecommendationsProvider } from "../context/RecommendationsContext";
 
 // Páginas
 import Home from "../pages/Home/Home";
@@ -35,8 +36,10 @@ function AppRoutes() {
           element: 
             <CatalogProvider>
               <WorkAddSearchProvider>
-                <ScrollToTop />
-                <AppLayout />
+                <RecommendationsProvider>
+                  <ScrollToTop />
+                  <AppLayout />
+                </RecommendationsProvider>
               </WorkAddSearchProvider>
             </CatalogProvider>,
           children: [
