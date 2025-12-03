@@ -40,7 +40,7 @@ const CatalogHeader: React.FC<CatalogHeaderProps> = ({
       </h1>
 
       {/* Direita: botões de ações */}
-      <div className="flex flex-row items-center justify-end gap-1">
+      <div className="flex flex-row items-center justify-end gap-3">
         {onSearchChange && (
           <div className="relative">
             <Search className="pointer-events-none absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-light-text dark:text-dark-text" />
@@ -56,13 +56,13 @@ const CatalogHeader: React.FC<CatalogHeaderProps> = ({
         <Button
           className="w-8"
           variant="icon"
-          startIcon={<CirclePlus size={18} />}
+          startIcon={<CirclePlus className="icon-size" />}
           aria-label="Adicionar"
           onClick={onAdd}
         />
         <Button
           variant="icon"
-          startIcon={<SlidersHorizontal size={18} />}
+          startIcon={<SlidersHorizontal className="icon-size" />}
           aria-label="Filtrar"
           onClick={onFilter}
           className="w-8"

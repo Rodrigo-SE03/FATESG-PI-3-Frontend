@@ -24,38 +24,38 @@ export type NavItem = {
   name: string;
   icon?: React.ReactNode;
   path?: string;
-  action?: "toggleTheme" | "logout"; // novo
+  action?: "toggleTheme" | "logout";
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
 export const navItems: NavItem[] = [
   {
-    icon: <House />,
+    icon: <House className="icon-size" />,
     name: "Início",
     path: "/",
   },
   {
-    icon: <Film />,
+    icon: <Film className="icon-size" />,
     name: "Filmes",
     path: "/filmes",
   },
   {
-    icon: <Book />,
+    icon: <Book className="icon-size" />,
     name: "Livros",
     path: "/livros",
   },
   {
-    icon: <Gamepad2 />,
+    icon: <Gamepad2 className="icon-size" />,
     name: "Jogos",
     path: "/jogos",
   },
   {
-    icon: <Origami />,
+    icon: <Origami className="icon-size" />,
     name: "Animes",
     path: "/animes",
   },
   {
-    icon: <Star />,
+    icon: <Star className="icon-size text-yellow-400" />,
     name: "Recomendações",
     path: "/recomendacoes",
   }
@@ -347,15 +347,15 @@ const AppSidebar: React.FC = () => {
       >
         <div className="flex items-center w-full justify-center">
           {isExpanded || isHovered || isMobileOpen ? (
-            <div className="flex flex-row justify-between w-full">
+            <div className="flex flex-row justify-between w-full items-center">
               <img
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo-full.png"
                 alt="Logo"
-                width={150}
+                width={100}
                 height={40}
               />
               <Menu 
-                className="size-6 text-dark-text cursor-pointer" 
+                className="size-6 text-dark-text cursor-pointer hidden lg:block" 
                 onClick={toggleSidebar}
               />
             </div>

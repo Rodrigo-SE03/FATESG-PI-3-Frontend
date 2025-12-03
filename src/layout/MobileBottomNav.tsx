@@ -81,6 +81,7 @@ const MobileBottomNav: React.FC = () => {
       className="
         fixed bottom-0 left-0 right-0 z-40
         w-full
+        h-15
         flex items-center gap-2
         bg-light-bg/95 dark:bg-dark-bg/95
         border-t border-light-border dark:border-dark-border

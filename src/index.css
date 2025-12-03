@@ -886,3 +886,8 @@ span.flatpickr-weekday,
 .common-card {
   @apply p-4 border border-light-border dark:border-dark-border rounded-2xl bg-light-bg-alt dark:bg-dark-bg-alt text-light-text dark:text-dark-text;
 }
+
+/* Tamanho dos ícones */
+.icon-size {
+  @apply h-8 w-8;
+}
