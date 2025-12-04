@@ -1,7 +1,8 @@
 import api from "../auth/Api";
 import { AddPayload, UpdatePayload } from "../types/works";
+import { WorkType } from "../types/works";
 
-export const fetchWorks = async (type?: string, limit?:number) => {
+export const fetchWorks = async (type?: WorkType, limit?:number) => {
   try {
     const response = await api.get(`/catalog?${type ? `categoria=${type}` : ""}${limit ? `&limit=${limit}` : ""}`);
     return response.data;
@@ -11,7 +12,7 @@ export const fetchWorks = async (type?: string, limit?:number) => {
   }
 };
 
-export const removeWork = async (type: string, id: string) => {
+export const removeWork = async (type: WorkType, id: string) => {
   try {
     const response = await api.delete(`/catalog?category=${type}&id=${id}`);
     return response.data;
@@ -41,7 +42,7 @@ export const editWork = async (data: UpdatePayload) => {
   }
 };
 
-export const searchWorks = async (type: string, query: string) => {
+export const searchWorks = async (type: WorkType, query: string) => {
   try {
     const response = await api.get(`/search?category=${type}&q=${encodeURIComponent(query)}`);
     return response.data;
@@ -51,12 +52,23 @@ export const searchWorks = async (type: string, query: string) => {
   }
 };
 
-export const getRecommendationsByUser = async (type: string) => {
+export const getRecommendationsByUser = async (type: WorkType) => {
   try {
     const response = await api.get(`/recommendations/user?target_category=${type}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching recommendations:`, error);
+    throw error;
+  }
+};
+
+export const getRecommendationsByItem = async (type: WorkType, id: string, target_category: WorkType) => {
+  try {
+    const response = await api.get(`/recommendations/item?category=${type}&id=${id}&target_category=${target_category}`);
+    console.log("Recommendations response:", response.data.recommendations);
+    return response.data.recommendations;
+  } catch (error) {
+    console.error(`Error fetching item-based recommendations:`, error);
     throw error;
   }
 };

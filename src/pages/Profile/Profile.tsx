@@ -5,7 +5,7 @@ export default function Profile() {
   return (
     <>
     <PageMeta description="Página do Perfil" />
-      <ProfileFields initialName="Rodrigo" />
+      <ProfileFields />
     </>
   );
 }

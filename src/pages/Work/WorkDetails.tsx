@@ -12,6 +12,7 @@ import FormModal from "../../components/workAdd/FormModal";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Star, StarHalf } from "lucide-react";
+import SimilarRecommendations from "../../components/workDetails/SimilarRecommendations";
 
 const MAX_STARS = 5;
 
@@ -354,6 +355,13 @@ const WorkDetails: React.FC = () => {
             </p>
           </div>
         )}
+
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold mb-2 text-light-text dark:text-dark-text">
+            Indicações Semelhantes
+          </h2>
+          <SimilarRecommendations workId={item.id} workType={item.category} />
+        </div>
       </div>
       <Modal
         isOpen={modalOpen}
