@@ -23,6 +23,7 @@ import BooksAdd from "../pages/Books/BooksAdd";
 import Games from "../pages/Games/Games";
 import GamesAdd from "../pages/Games/GamesAdd";
 import Recommendation from "../pages/Recommendation/Recomendation";
+import Profile from "../pages/Profile/Profile";
 
 function AppRoutes() {
 
@@ -54,6 +55,7 @@ function AppRoutes() {
             { path: "jogos/add", element: <WorkAddSearchProvider><GamesAdd /></WorkAddSearchProvider> },
             { path: "recomendacoes", element: <Recommendation /> },
             { path: "work/:id", element: <WorkAddSearchProvider><CatalogProvider><WorkDetails /></CatalogProvider></WorkAddSearchProvider>},
+            { path: "profile", element: <Profile /> },
           ],
         },
       ],
