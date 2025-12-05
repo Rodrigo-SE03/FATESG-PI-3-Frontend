@@ -1,5 +1,4 @@
 import CatalogPage from "../../components/catalogPage/CatalogPage";
-import { mockMovies } from "../../utils/movies/movieItems";
 
 const Movies = () => {
   return (
@@ -7,7 +6,6 @@ const Movies = () => {
       title="Filmes"
       description="Catálogo de filmes"
       workType="filme"
-      mockItems={mockMovies}
     />
   );
 };

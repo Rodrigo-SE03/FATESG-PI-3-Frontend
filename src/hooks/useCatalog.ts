@@ -6,13 +6,11 @@ import { useCatalogContext } from "../context/CatalogContext";
 
 type UseCatalogOptions = {
   workType: WorkType;
-  mockItems?: WorkItem[];
   filterFn?: (item: WorkItem, term: string) => boolean;
 };
 
 export function useCatalog({
   workType,
-  mockItems = [],
   filterFn,
 }: UseCatalogOptions) {
   const { catalogs, setCatalogs } = useCatalogContext();
@@ -67,7 +65,7 @@ export function useCatalog({
             ...prev,
             [workType]: {
               ...prevSlice,
-              items: mockItems,
+              items: [],
             },
           };
         });
@@ -78,7 +76,7 @@ export function useCatalog({
 
     setLoading(true);
     void load();
-  }, [workType, items.length, mockItems, setCatalogs]);
+  }, [workType, items.length, setCatalogs]);
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
 

@@ -15,7 +15,6 @@ type CatalogPageProps = {
   title: string;
   description: string;
   workType: WorkType;
-  mockItems?: WorkItem[];
   filterFn?: (item: WorkItem, term: string) => boolean;
 };
 
@@ -26,7 +25,6 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
   title,
   description,
   workType,
-  mockItems,
   filterFn,
 }) => {
   const navigate = useNavigate();
@@ -39,7 +37,7 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
     filteredItems,
     searchTerm,
     setSearchTerm,
-  } = useCatalog({ workType, mockItems, filterFn });
+  } = useCatalog({ workType, filterFn });
 
   // estado do modal de filtros
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
