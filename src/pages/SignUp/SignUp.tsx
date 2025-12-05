@@ -96,6 +96,22 @@ const SignUp = () => {
       return;
     }
 
+    const birth = new Date(birthdate);
+    const today = new Date();
+
+    // calcula data mínima: hoje - 18 anos
+    const minAllowed = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    // se a data de nascimento for maior que a data mínima => menor de 18
+    if (birth > minAllowed) {
+      setErrorMessage("Você deve ter pelo menos 18 anos para se cadastrar.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setErrorMessage("As senhas não coincidem");
       return;
