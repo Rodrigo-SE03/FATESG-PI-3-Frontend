@@ -6,10 +6,14 @@ import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import {
   fetchUserAttributes,
   updateUserAttributes,
+  updatePassword,
 } from "aws-amplify/auth";
 
-// Se estiver usando o Amplify modular v6:
 import { uploadData, getUrl } from "aws-amplify/storage";
+
+import Toast from "../common/Toast";
+import { ToastData } from "../common/Toast";
+import { set } from "date-fns";
 
 type ProfileState = {
   name: string;
@@ -21,19 +25,13 @@ type SaveProfileData = {
   avatarFile?: File | null;
 };
 
-type ProfileFieldsProps = {
-  // callback opcional para side effects extras (ex: analytics)
-  onSaveProfile?: (data: SaveProfileData) => Promise<void> | void;
-  onChangePassword?: (data: {
-    currentPassword: string;
-    newPassword: string;
-  }) => Promise<void> | void;
+type ChangePasswordData = {
+  currentPassword: string;
+  newPassword: string;
 };
 
-const ProfileFields: React.FC<ProfileFieldsProps> = ({
-  onSaveProfile,
-  onChangePassword,
-}) => {
+const ProfileFields = () => {
+  const [toastData, setToastData] = useState<ToastData>({ open: false, title: "", message: "", color: "info" });
   const [profile, setProfile] = useState<ProfileState | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,49 +51,76 @@ const ProfileFields: React.FC<ProfileFieldsProps> = ({
     }
   }, []);
 
-  const handleSaveProfile = async ({ name, avatarFile }: SaveProfileData) => {
-    try {
-      let pictureUrl = profile?.picture;
+  const handleSaveProfile = useCallback(
+    async ({ name, avatarFile }: SaveProfileData) => {
+      try {
+        let pictureUrl = profile?.picture;
 
-      if (avatarFile) {
-        const path = `avatars/${Date.now()}-${avatarFile.name}`; // TODO - Configurar bucket para os avatares
+        if (avatarFile) {
+          const path = `avatars/${Date.now()}-${avatarFile.name}`;
 
-        await uploadData({
-          path,
-          data: avatarFile,
-          options: {
-            contentType: avatarFile.type,
-            // accessLevel: "public", // se você quiser explicitar
+          await uploadData({
+            path,
+            data: avatarFile,
+            options: {
+              bucket: {
+                bucketName: "mylib-internal-files",
+                region: "sa-east-1",
+              },
+            },
+          }).result;
+
+          const { url } = await getUrl({
+            path,
+            options: {
+              bucket: {
+                bucketName: "mylib-internal-files",
+                region: "sa-east-1",
+              },
+            },
+          });
+
+          pictureUrl = url.toString();
+        }
+
+        await updateUserAttributes({
+          userAttributes: {
+            name,
+            ...(pictureUrl ? { picture: pictureUrl } : {}),
           },
-        }).result;
-
-        const { url } = await getUrl({
-          path,
-          // options: { accessLevel: "public" },
         });
 
-        pictureUrl = url.toString();
+        setProfile((prev) =>
+          prev
+            ? { ...prev, name, picture: pictureUrl }
+            : { name, picture: pictureUrl }
+        );
+        setToastData({ open: true, title: "Sucesso", message: "Perfil atualizado com sucesso.", color: "success" });
+      } catch (error) {
+        console.error("Erro ao salvar perfil do usuário:", error);
+        setToastData({ open: true, title: "Erro", message: "Erro ao salvar perfil. Tente novamente.", color: "error" });
+        throw error;
       }
+    },
+    [profile?.picture]
+  );
 
-      await updateUserAttributes({
-        userAttributes: {
-          name,
-          ...(pictureUrl ? { picture: pictureUrl } : {}),
-        },
-      });
-
-      setProfile((prev) =>
-        prev ? { ...prev, name, picture: pictureUrl } : { name, picture: pictureUrl }
-      );
-
-      if (onSaveProfile) {
-        await onSaveProfile({ name, avatarFile });
+  const handleSavePassword = useCallback(
+    async ({ currentPassword, newPassword }: ChangePasswordData) => {
+      try {
+        await updatePassword({
+          oldPassword: currentPassword,
+          newPassword,
+        });
+        setToastData({ open: true, title: "Sucesso", message: "Senha alterada com sucesso.", color: "success" });
+      } catch (error) {
+        console.error("Erro ao alterar senha:", error);
+        setToastData({ open: true, title: "Erro", message: "Erro ao alterar senha. Verifique suas credenciais e tente novamente.", color: "error" });
+        throw error;
       }
-    } catch (error) {
-      console.error("Erro ao salvar perfil do usuário:", error);
-      throw error;
-    }
-  };
+    },
+    []
+  );
 
   useEffect(() => {
     loadUserProfile();
@@ -112,7 +137,14 @@ const ProfileFields: React.FC<ProfileFieldsProps> = ({
         initialAvatarUrl={profile?.picture}
         onSaveProfile={handleSaveProfile}
       />
-      <PasswordSection onChangePassword={onChangePassword} />
+      <PasswordSection onChangePassword={handleSavePassword} />
+      <Toast
+        open={toastData.open}
+        title={toastData.title}
+        message={toastData.message}
+        color={toastData.color}
+        onClose={() => setToastData((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 };

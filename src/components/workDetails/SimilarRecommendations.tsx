@@ -2,10 +2,10 @@ import { Tabs } from "../tabs/Tabs";
 import ItemsGrid from "../itemsGrid/ItemsGrid";
 import { categoryOptions } from "../../utils/commonItems";
 import { useState, useEffect } from "react";
-import { mockMovies } from "../../utils/movies/movieItems";
 import type { WorkType } from "../../types/works";
 import { WorkItem } from "../../types/works";
 import { getRecommendationsByItem } from "../../utils/requests";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const tabOptions = categoryOptions.map(({ value, label }) => ({ id: value, label: `${label}s` }));
 
@@ -26,13 +26,17 @@ const SimilarRecommendations = ({ workType, workId }: SimilarRecommendationsProp
     livro: [],
   });
 
+  const [loading, setLoading] = useState(true);
+
   const fetchRecommendations = async (target_type: WorkType) => {
+    setLoading(true);
     try {
       const data = await getRecommendationsByItem(workType, workId, target_type);
       setRecommendations((prev) => ({ ...prev, [target_type]: data }));
     } catch (error) {
       console.error(`Failed to fetch recommendations for ${target_type}:`, error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -40,6 +44,10 @@ const SimilarRecommendations = ({ workType, workId }: SimilarRecommendationsProp
       fetchRecommendations(tab.id as WorkType);
     });
   }, [workType, workId]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <Tabs
