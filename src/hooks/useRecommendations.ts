@@ -39,7 +39,7 @@ export function useRecommendations(category: WorkType) {
   const checkAvailability = useCallback(async () => {
     updateSlice({ checkingAvailability: true });
     try {
-      const items = await fetchWorks(category, 1);
+      const items = await fetchWorks(undefined,1);
       updateSlice({
         available: items.items.length > 0,
       });
