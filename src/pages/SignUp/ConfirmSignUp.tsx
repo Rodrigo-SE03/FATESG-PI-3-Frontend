@@ -2,7 +2,7 @@ import { useState } from "react";
 import Input from "../../components/form/input/InputField";
 import Label from "../../components/form/Label";
 import Button from "../../components/ui/button/Button";
-import { confirmSignUp } from "aws-amplify/auth";
+import { confirmSignUp, autoSignIn } from "aws-amplify/auth";
 
 const ConfirmSignUp = () => {
   localStorage.setItem("theme", "dark");
@@ -29,9 +29,8 @@ const ConfirmSignUp = () => {
         confirmationCode: code,
       });
 
-      setSuccessMessage("Conta confirmada com sucesso! Você já pode fazer login.");
+      setSuccessMessage("Conta confirmada com sucesso!");
       // se quiser redirecionar direto:
-      // window.location.href = "/login";
     } catch (err: any) {
       console.error(err);
       const msg =

@@ -8,8 +8,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthPageLayout";
 
 const SignIn = () => {
-  localStorage.setItem("theme", "dark");
-
   const { reloadUser } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
 

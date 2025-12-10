@@ -6,6 +6,9 @@ import Checkbox from "../../components/form/input/Checkbox";
 import { useState } from "react";
 import { signUp } from "aws-amplify/auth";
 import AuthLayout from "../../layout/AuthPageLayout";
+import { sha256 } from 'js-sha256';
+import Toast from "../../components/common/Toast";
+import { ToastData } from "../../components/common/Toast";
 
 // ---- Helpers de senha (mesmos da outra página) ----
 type PasswordCriteria = {
@@ -66,6 +69,7 @@ const XIcon = ({ className = "" }: { className?: string }) => (
 
 const SignUp = () => {
   localStorage.setItem("theme", "dark");
+  const [toastData, setToastData] = useState<ToastData>({ open: false, title: "", message: "", color: "info" });
   const [gender, setGender] = useState("Masculino");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -121,27 +125,24 @@ const SignUp = () => {
       setErrorMessage("Selecione um gênero");
       return;
     }
-
+    const hashedEmail = sha256(email.trim().toLowerCase());
     try {
       await signUp({
-        username, // ou: username: email
+        username,
         password,
         options: {
           userAttributes: {
             email,
             name,
             birthdate,
-            gender, // aqui você pode mapear para "male" | "female" | "other" se quiser
+            gender,
             picture:
-              "https://extra-images-storage.s3.sa-east-1.amazonaws.com/contexto.webp",
+              `https://gravatar.com/avatar/${hashedEmail}`,
           },
         },
       });
 
-      alert(
-        "Cadastro realizado com sucesso! Verifique seu e-mail para o código de confirmação."
-      );
-      window.location.href = "/confirm-signup";
+      setToastData({ open: true, title: "Sucesso", message: "Cadastro realizado! Verifique seu e-mail para confirmar sua conta.", color: "success" });
     } catch (err: any) {
       console.error(err);
       const msg =
@@ -312,6 +313,13 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      <Toast
+        open={toastData.open}
+        title={toastData.title}
+        message={toastData.message}
+        color={toastData.color}
+        onClose={() => setToastData((prev) => ({ ...prev, open: false }))}
+      />
     </AuthLayout>
   );
 };
