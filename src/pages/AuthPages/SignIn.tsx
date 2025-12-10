@@ -96,6 +96,14 @@ const SignIn = () => {
             </a>
           </p>
         </div>
+        <div>
+          <p className="mt-4 text-sm text-center">
+            Esqueceu sua senha?{" "}
+            <a href="/forgot-password" className="text-brand-500 hover:underline">
+              Recuperar Senha
+            </a>
+          </p>
+        </div>
       </div>
       </div>
       </div>

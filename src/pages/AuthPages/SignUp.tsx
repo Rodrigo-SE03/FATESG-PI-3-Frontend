@@ -9,6 +9,7 @@ import AuthLayout from "../../layout/AuthPageLayout";
 import { sha256 } from 'js-sha256';
 import Toast from "../../components/common/Toast";
 import { ToastData } from "../../components/common/Toast";
+import { useNavigate } from "react-router-dom";
 
 // ---- Helpers de senha (mesmos da outra página) ----
 type PasswordCriteria = {
@@ -68,7 +69,7 @@ const XIcon = ({ className = "" }: { className?: string }) => (
 );
 
 const SignUp = () => {
-  localStorage.setItem("theme", "dark");
+  const navigate = useNavigate();
   const [toastData, setToastData] = useState<ToastData>({ open: false, title: "", message: "", color: "info" });
   const [gender, setGender] = useState("Masculino");
   const [errorMessage, setErrorMessage] = useState("");
@@ -143,6 +144,10 @@ const SignUp = () => {
       });
 
       setToastData({ open: true, title: "Sucesso", message: "Cadastro realizado! Verifique seu e-mail para confirmar sua conta.", color: "success" });
+      setTimeout(() => {
+        navigate("/login");
+      }, 5000);
+      
     } catch (err: any) {
       console.error(err);
       const msg =
@@ -295,6 +300,7 @@ const SignUp = () => {
               <Button
                 type="submit"
                 className="mt-4 bg-button-primary text-white py-2 px-4 rounded hover:bg-brand-700 transition-colors"
+                disabled={toastData.open}
               >
                 Cadastrar
               </Button>

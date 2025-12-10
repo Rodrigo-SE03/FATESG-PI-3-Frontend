@@ -9,10 +9,11 @@ import { RecommendationsProvider } from "../context/RecommendationsContext";
 
 // Páginas
 import Home from "../pages/Home/Home";
-import SignIn from "../pages/SignIn/SignIn";
-import SignUp from "../pages/SignUp/SignUp";
-import ConfirmSignUp from "../pages/SignUp/ConfirmSignUp";
-import Confirmation from "../pages/SignUp/Confirmation";
+import SignIn from "../pages/AuthPages/SignIn";
+import SignUp from "../pages/AuthPages/SignUp";
+import Confirmation from "../pages/AuthPages/Confirmation";
+import ForgotPassword from "../pages/AuthPages/ForgotPassword";
+import RecoverPassword from "../pages/AuthPages/RecoverPassword";
 import NotFound from "../pages/OtherPage/NotFound";
 import WorkDetails from "../pages/Work/WorkDetails";
 import Movies from "../pages/Movies/Movies";
@@ -69,8 +70,9 @@ function AppRoutes() {
       children: [
         { path: "login", element: <SignIn /> },
         { path: "signup", element: <SignUp /> },
-        { path: "confirm-signup", element: <ConfirmSignUp /> },
         { path: "confirmation", element: <Confirmation /> },
+        { path: "forgot-password", element: <ForgotPassword /> },
+        { path: "recover-password", element: <RecoverPassword /> }
       ],
     },
 
