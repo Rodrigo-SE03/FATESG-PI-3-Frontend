@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ProfileInfoSection from "./ProfileInfoSection";
 import PasswordSection from "./PasswordSection";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
@@ -13,7 +13,6 @@ import { uploadData, getUrl } from "aws-amplify/storage";
 
 import Toast from "../common/Toast";
 import { ToastData } from "../common/Toast";
-import { set } from "date-fns";
 
 type ProfileState = {
   name: string;
@@ -39,7 +38,7 @@ const ProfileFields = () => {
     try {
       setLoading(true);
       const attrs = await fetchUserAttributes();
-
+      console.log(attrs);
       setProfile({
         name: attrs.name ?? "",
         picture: attrs.picture,
@@ -70,17 +69,8 @@ const ProfileFields = () => {
             },
           }).result;
 
-          const { url } = await getUrl({
-            path,
-            options: {
-              bucket: {
-                bucketName: "mylib-internal-files",
-                region: "sa-east-1",
-              },
-            },
-          });
-
-          pictureUrl = url.toString();
+          // URL fixa pública, sem X-Amz-Expires
+          pictureUrl = `https://mylib-internal-files.s3.sa-east-1.amazonaws.com/${path}`;
         }
 
         await updateUserAttributes({
@@ -95,10 +85,8 @@ const ProfileFields = () => {
             ? { ...prev, name, picture: pictureUrl }
             : { name, picture: pictureUrl }
         );
-        setToastData({ open: true, title: "Sucesso", message: "Perfil atualizado com sucesso.", color: "success" });
       } catch (error) {
         console.error("Erro ao salvar perfil do usuário:", error);
-        setToastData({ open: true, title: "Erro", message: "Erro ao salvar perfil. Tente novamente.", color: "error" });
         throw error;
       }
     },
