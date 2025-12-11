@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
+import { syncMalData } from "../../utils/requests";
 import ProfileInfoSection from "./ProfileInfoSection";
 import PasswordSection from "./PasswordSection";
+import IntegrationSection from "./IntegrationSection";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 import {
@@ -9,7 +11,7 @@ import {
   updatePassword,
 } from "aws-amplify/auth";
 
-import { uploadData, getUrl } from "aws-amplify/storage";
+import { uploadData } from "aws-amplify/storage";
 
 import Toast from "../common/Toast";
 import { ToastData } from "../common/Toast";
@@ -38,7 +40,6 @@ const ProfileFields = () => {
     try {
       setLoading(true);
       const attrs = await fetchUserAttributes();
-      console.log(attrs);
       setProfile({
         name: attrs.name ?? "",
         picture: attrs.picture,
@@ -110,6 +111,24 @@ const ProfileFields = () => {
     []
   );
 
+  const handleSyncMal = useCallback(
+    async (username: string) => {
+      setLoading(true);
+      try {
+        syncMalData(username);
+        setToastData({ open: true, title: "Sucesso", message: "Sincronização em andamento. A sincronização completa pode levar alguns minutos", color: "success" });
+      } catch (error) {
+        console.error("Erro ao sincronizar com MyAnimeList:", error);
+        setToastData({ open: true, title: "Erro", message: "Erro ao sincronizar. Tente novamente.", color: "error" });
+        throw error;
+      }
+      finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     loadUserProfile();
   }, [loadUserProfile]);
@@ -124,6 +143,9 @@ const ProfileFields = () => {
         initialName={profile?.name || ""}
         initialAvatarUrl={profile?.picture}
         onSaveProfile={handleSaveProfile}
+      />
+      <IntegrationSection
+        onSyncMal={handleSyncMal}
       />
       <PasswordSection onChangePassword={handleSavePassword} />
       <Toast

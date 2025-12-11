@@ -65,10 +65,19 @@ export const getRecommendationsByUser = async (type: WorkType) => {
 export const getRecommendationsByItem = async (type: WorkType, id: string, target_category: WorkType) => {
   try {
     const response = await api.get(`/recommendations/item?category=${type}&id=${id}&target_category=${target_category}`);
-    console.log("Recommendations response:", response.data.recommendations);
     return response.data.recommendations;
   } catch (error) {
     console.error(`Error fetching item-based recommendations:`, error);
+    throw error;
+  }
+};
+
+export const syncMalData = (malUsername: string) => {
+  try {
+    api.post(`/catalog/sync-mal`, { username: malUsername });
+    return "ok";
+  } catch (error) {
+    console.error(`Error syncing MyAnimeList data for username ${malUsername}:`, error);
     throw error;
   }
 };
