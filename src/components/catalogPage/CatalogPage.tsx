@@ -7,9 +7,11 @@ import { useCatalog } from "../../hooks/useCatalog";
 import { WorkType } from "../../types/works";
 import { useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
+import { ArrowDownUp, ArrowDown, ArrowUp } from "lucide-react";
 import { Modal } from "../ui/modal";
 import Select from "../form/Select";
 import Button from "../ui/button/Button";
+import { set } from "date-fns";
 
 type CatalogPageProps = {
   title: string;
@@ -19,7 +21,17 @@ type CatalogPageProps = {
 };
 
 type SortOption = "rating" | "date";
+type SortDir = "desc" | "asc";
 type StatusFilter = "all" | "completed" | "in_progress" | "planned" | "on_hold" | "abandoned";
+
+const statusMap: Record<StatusFilter, string> = {
+  all: "Todos",
+  completed: "Completo",
+  in_progress: "Em progresso",
+  planned: "Planejado",
+  on_hold: "Pausado",
+  abandoned: "Abandonado",
+};
 
 const CatalogPage: React.FC<CatalogPageProps> = ({
   title,
@@ -42,7 +54,12 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
   // estado do modal de filtros
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("rating");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+
+  const toggleSortDir = () => {
+    setSortDir((d) => (d === "desc" ? "asc" : "desc"));
+  };
 
   const handleOpenFilters = () => setIsFilterModalOpen(true);
   const handleCloseFilters = () => setIsFilterModalOpen(false);
@@ -56,26 +73,28 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
       items = items.filter((item) => item.status === statusFilter);
     }
 
+    const dir = sortDir === "desc" ? 1 : -1;
+
     // ordenação
     items.sort((a, b) => {
       if (sortBy === "rating") {
         const ar = a.rating ?? 0;
         const br = b.rating ?? 0;
-        return br - ar; // maior avaliação primeiro
+        return (dir * (br - ar));
       }
 
       if (sortBy === "date") {
         // troque "date" pelo campo real de data se for outro
         const ad = a.created_at ? new Date(a.created_at).getTime() : 0;
         const bd = b.created_at ? new Date(b.created_at).getTime() : 0;
-        return bd - ad; // mais recente primeiro
+        return (dir * (bd - ad));
       }
 
       return 0;
     });
 
     return items;
-  }, [filteredItems, sortBy, statusFilter]);
+  }, [filteredItems, sortBy, statusFilter, sortDir]);
 
   return (
     <>
@@ -94,7 +113,22 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
             <LoadingSpinner />
           </div>
         ) : (
+          <>
+          <div className="mb-2 justify-between flex flex-row">
+            <p>{statusMap[statusFilter]} - {displayedItems.length > 1 ? `${displayedItems.length} itens` : "1 item"}</p>
+            <Button
+              variant="icon"
+              size="none"
+              startIcon={
+                sortDir === "desc" ? <ArrowDown size={16} /> : <ArrowUp size={16} />
+              }
+              onClick={toggleSortDir}
+            >
+              {sortBy === "rating" ? "Avaliação" : "Data"}
+            </Button>
+          </div>
           <ItemsGrid items={displayedItems} />
+          </>
         )}
       </div>
 
@@ -142,6 +176,7 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
               onClick={() => {
                 setSortBy("rating");
                 setStatusFilter("all");
+                setSortDir("desc");
               }}
             >
               Limpar

@@ -64,6 +64,8 @@ const WorkDetails: React.FC = () => {
     if (locationState?.item) {
       setItem(locationState.item);
     }
+
+    checkIfInLibrary();
   }, [id]);
   
   const checkIfInLibrary = async () => {
@@ -82,7 +84,7 @@ const WorkDetails: React.FC = () => {
 
   useEffect(() => {
     checkIfInLibrary();
-  }, [item,alreadyInLibrary, id]);
+  }, [item, alreadyInLibrary]);
 
   const typeLabel = capitalizeFirstLetter(item.category);
 

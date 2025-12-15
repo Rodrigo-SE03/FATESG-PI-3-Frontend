@@ -98,7 +98,7 @@ const Home = () => {
             const recentItems = getRecentItems(items);
 
             return (
-              <section key={type} className="mb-8">
+              <section key={type} className="mb-6">
                 {/* Título da categoria + contagem */}
                 <div className="flex items-baseline justify-between mb-2">
                   <h2 className="text-lg font-semibold">{label}</h2>
@@ -117,6 +117,7 @@ const Home = () => {
                     <div className="flex -mx-1">
                       {recentItems.map((item) => (
                         <ItemThumb
+                          key={item.id}
                           item={item}
                           containerClassName="
                           flex-shrink-0
