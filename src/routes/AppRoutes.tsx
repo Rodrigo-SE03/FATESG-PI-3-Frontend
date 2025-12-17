@@ -24,6 +24,10 @@ import Books from "../pages/Books/Books";
 import BooksAdd from "../pages/Books/BooksAdd";
 import Games from "../pages/Games/Games";
 import GamesAdd from "../pages/Games/GamesAdd";
+import Series from "../pages/Series/Series";
+import SeriesAdd from "../pages/Series/SeriesAdd";
+import Mangas from "../pages/Mangas/Mangas";
+import MangasAdd from "../pages/Mangas/MangasAdd";
 import Recommendation from "../pages/Recommendation/Recomendation";
 import Profile from "../pages/Profile/Profile";
 
@@ -55,6 +59,10 @@ function AppRoutes() {
             { path: "livros/add", element: <WorkAddSearchProvider><BooksAdd /></WorkAddSearchProvider> },
             { path: "jogos", element: <CatalogProvider><Games /></CatalogProvider> },
             { path: "jogos/add", element: <WorkAddSearchProvider><GamesAdd /></WorkAddSearchProvider> },
+            { path: "series", element: <CatalogProvider><Series /></CatalogProvider> },
+            { path: "series/add", element: <WorkAddSearchProvider><SeriesAdd /></WorkAddSearchProvider> },
+            { path: "mangas", element: <CatalogProvider><Mangas /></CatalogProvider> },
+            { path: "mangas/add", element: <WorkAddSearchProvider><MangasAdd /></WorkAddSearchProvider> },
             { path: "recomendacoes", element: <Recommendation /> },
             { path: "work/:id", element: <WorkAddSearchProvider><CatalogProvider><WorkDetails /></CatalogProvider></WorkAddSearchProvider>},
             { path: "profile", element: <Profile /> },

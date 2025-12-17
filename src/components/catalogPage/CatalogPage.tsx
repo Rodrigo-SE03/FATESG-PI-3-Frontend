@@ -115,7 +115,7 @@ const CatalogPage: React.FC<CatalogPageProps> = ({
         ) : (
           <>
           <div className="mb-2 justify-between flex flex-row">
-            <p>{statusMap[statusFilter]} - {displayedItems.length > 1 ? `${displayedItems.length} itens` : "1 item"}</p>
+            <p>{statusMap[statusFilter]} - {displayedItems.length !== 1 ? `${displayedItems.length} itens` : "1 item"}</p>
             <Button
               variant="icon"
               size="none"

@@ -5,4 +5,6 @@ export const categoryOptions = [
   { value: "anime" as WorkType, label: "Anime" },
   { value: "jogo" as WorkType, label: "Jogo" },
   { value: "livro" as WorkType, label: "Livro" },
+  { value: "serie" as WorkType, label: "Série" },
+  { value: "manga" as WorkType, label: "Mangá" },
 ];

@@ -106,7 +106,7 @@ const MobileBottomNav: React.FC = () => {
       {/* Área de navegação: principais (scroll) | divisor | others fixo */}
       <div className="flex-1 flex items-center min-w-0">
         {/* Grupo principal com scroll horizontal */}
-        <div className="flex-1 overflow-x-auto no-scrollbar min-w-0">
+        <div className="flex-1 overflow-x-auto no-scrollbar min-w-0 overflow-y-hidden">
           {/* TODO - Trocar o justify-evenly por justify-start quando tiver mais páginas */}
           <div className="flex items-center justify-evenly gap-4 px-2 whitespace-nowrap">
             {primaryItems.map(renderFooterItem)}

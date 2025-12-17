@@ -24,25 +24,25 @@ const SimilarRecommendations = ({ workType, workId }: SimilarRecommendationsProp
     anime: [],
     jogo: [],
     livro: [],
+    manga: [],
+    serie: [],
   });
 
   const [loading, setLoading] = useState(true);
 
-  const fetchRecommendations = async (target_type: WorkType) => {
+  const fetchRecommendations = async () => {
     setLoading(true);
     try {
-      const data = await getRecommendationsByItem(workType, workId, target_type);
-      setRecommendations((prev) => ({ ...prev, [target_type]: data }));
+      const data = await getRecommendationsByItem(workType, workId);
+      setRecommendations(data);
     } catch (error) {
-      console.error(`Failed to fetch recommendations for ${target_type}:`, error);
+      console.error(`Failed to fetch recommendations: `, error);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    tabOptions.forEach((tab) => {
-      fetchRecommendations(tab.id as WorkType);
-    });
+    fetchRecommendations();
   }, [workType, workId]);
 
   if (loading) {

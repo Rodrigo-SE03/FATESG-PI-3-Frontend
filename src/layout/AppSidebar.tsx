@@ -8,16 +8,15 @@ import {
   Menu,
   Moon,
   Sun,
-  Film,
-  Book,
-  Origami,
-  Gamepad2,
   CircleUser, 
   Ellipsis, 
   ChevronDown,
   Star,
   LogOut
 } from "lucide-react";
+import { FaFilm, FaBook, FaGamepad, FaBookOpen } from "react-icons/fa";
+import { MdTv } from "react-icons/md";
+import { GiNinjaStar } from "react-icons/gi";
 import { useSidebar } from "../context/SidebarContext";
 
 export type NavItem = {
@@ -35,24 +34,34 @@ export const navItems: NavItem[] = [
     path: "/",
   },
   {
-    icon: <Film className="icon-size" />,
+    icon: <FaFilm className="icon-size" />,
     name: "Filmes",
     path: "/filmes",
   },
   {
-    icon: <Book className="icon-size" />,
+    icon: <FaBook className="icon-size" />,
     name: "Livros",
     path: "/livros",
   },
   {
-    icon: <Gamepad2 className="icon-size" />,
+    icon: <FaGamepad className="icon-size" />,
     name: "Jogos",
     path: "/jogos",
   },
   {
-    icon: <Origami className="icon-size" />,
+    icon: <GiNinjaStar className="icon-size" />,
     name: "Animes",
     path: "/animes",
+  },
+  {
+    icon: <MdTv className="icon-size" />,
+    name: "Séries",
+    path: "/series",
+  },
+  {
+    icon: <FaBookOpen className="icon-size" />,
+    name: "Mangás",
+    path: "/mangas",
   },
   {
     icon: <Star className="icon-size text-yellow-500" />,
@@ -327,7 +336,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-0 flex flex-col lg:mt-0 top-0 px-5 left-0 sidebar-colors h-screen transition-all duration-300 ease-in-out z-50
+      className={`fixed mt-0 flex flex-col lg:mt-0 top-0 px-5 left-0 sidebar-colors h-[calc(100dvh-3.75rem)] transition-all duration-300 ease-in-out z-50 md:h-screen
         ${
           isExpanded || isMobileOpen
             ? "w-sidebar-expanded-width"
@@ -367,7 +376,7 @@ const AppSidebar: React.FC = () => {
           )}
         </div>
       </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+      <div className="flex flex-col overflow-y-auto duration-300 ease-linear">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             <div>

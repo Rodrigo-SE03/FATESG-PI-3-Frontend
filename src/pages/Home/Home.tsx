@@ -10,41 +10,36 @@ const CATEGORIES: { type: WorkType; label: string }[] = [
   { type: "filme", label: "Filmes" },
   { type: "livro", label: "Livros" },
   { type: "jogo", label: "Jogos" },
-  { type: "anime", label: "Animes" }
+  { type: "anime", label: "Animes" },
+  { type: "serie", label: "Séries" },
+  { type: "manga", label: "Mangás" },
 ];
+
+const EMPTY_DATA: CategoryData = {
+  filme: [],
+  livro: [],
+  jogo: [],
+  anime: [],
+  serie: [],
+  manga: [],
+};
 
 type CategoryData = Record<WorkType, WorkItem[]>;
 
 const Home = () => {
   const { isExpanded } = useSidebar();
 
-  const [data, setData] = useState<CategoryData>({
-    filme: [],
-    livro: [],
-    anime: [],
-    jogo: [],
-  });
+  const [data, setData] = useState<CategoryData>(EMPTY_DATA);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const results = await Promise.all(
-          CATEGORIES.map(async ({ type }) => {
-            const { items } = await fetchWorks(type);
-            return { type, items };
-          })
-        );
-
-        const newData: Partial<CategoryData> = {};
-        results.forEach(({ type, items }) => {
-          newData[type] = items;
+        const { items } = await fetchWorks();
+        setData({
+          ...EMPTY_DATA,
+          ...(items ?? {}),
         });
-
-        setData((prev) => ({
-          ...prev,
-          ...(newData as CategoryData),
-        }));
       } catch (error) {
         console.error("Erro ao buscar itens para a Home:", error);
       } finally {

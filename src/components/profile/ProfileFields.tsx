@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { syncMalData } from "../../utils/requests";
+import { syncMalData } from "../../utils/syncRequests";
 import ProfileInfoSection from "./ProfileInfoSection";
 import PasswordSection from "./PasswordSection";
 import IntegrationSection from "./IntegrationSection";

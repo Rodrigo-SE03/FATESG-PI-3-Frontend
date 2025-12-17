@@ -1,4 +1,4 @@
-export type WorkType = "filme" | "anime" | "jogo" | "livro";
+export type WorkType = "filme" | "anime" | "jogo" | "livro" | "serie" | "manga";
 
 export type Status = "completed" | "in_progress" | "planned" | "on_hold" | "abandoned";
 
