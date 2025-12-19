@@ -376,7 +376,7 @@ const AppSidebar: React.FC = () => {
           )}
         </div>
       </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear">
+      <div className="flex flex-col overflow-y-auto duration-300 ease-linear custom-scrollbar">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             <div>

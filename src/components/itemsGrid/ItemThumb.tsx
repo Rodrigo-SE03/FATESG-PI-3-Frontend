@@ -41,7 +41,7 @@ const ItemThumb: React.FC<ItemThumbProps> = ({
       onClick();
       return;
     }
-
+    console.log("Navigating to item:", item);
     navigate(`/work/${item.id}`, { state: { item } });
   };
 
