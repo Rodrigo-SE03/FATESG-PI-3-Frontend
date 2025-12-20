@@ -70,30 +70,32 @@ const TabsRoot: React.FC<TabsProps> = ({
     <TabsContext.Provider value={{ activeTabId }}>
       <div className={`w-full ${className}`}>
         {/* Header das tabs */}
-        <div className="inline-flex gap-1 rounded-xl bg-light-bg/60 dark:bg-dark-bg/60 p-1 border border-light-border dark:border-dark-border">
-          {tabs.map((tab) => {
-            const isActive = tab.id === activeTabId;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                disabled={tab.disabled}
-                onClick={() => !tab.disabled && handleChange(tab.id)}
-                className={clsx(
-                  "px-3 py-1.5 text-theme-xs sm:text-theme-sm rounded-lg transition-all",
-                  "border border-transparent",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/70",
-                  tab.disabled &&
-                    "cursor-not-allowed opacity-50 hover:bg-transparent",
-                  isActive
-                    ? "bg-button-primary dark:bg-brand-primary text-dark-text dark:text-dark-text border-brand-200 dark:border-brand-800 shadow-sm"
-                    : "text-light-text/70 dark:text-dark-text/70 hover:bg-light-bg/80 hover:dark:bg-dark-bg/80"
-              )}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+        <div className="w-full overflow-x-auto custom-scrollbar">
+          <div className="inline-flex gap-1 whitespace-nowrap rounded-xl bg-light-bg/60 dark:bg-dark-bg/60 p-1 border border-light-border dark:border-dark-border">
+            {tabs.map((tab) => {
+              const isActive = tab.id === activeTabId;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  disabled={tab.disabled}
+                  onClick={() => !tab.disabled && handleChange(tab.id)}
+                  className={clsx(
+                    "px-3 py-1.5 text-theme-xs sm:text-theme-sm rounded-lg transition-all",
+                    "border border-transparent",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/70",
+                    tab.disabled &&
+                      "cursor-not-allowed opacity-50 hover:bg-transparent",
+                    isActive
+                      ? "bg-button-primary dark:bg-brand-primary text-dark-text dark:text-dark-text border-brand-200 dark:border-brand-800 shadow-sm"
+                      : "text-light-text/70 dark:text-dark-text/70 hover:bg-light-bg/80 hover:dark:bg-dark-bg/80"
+                )}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Conteúdo das tabs */}

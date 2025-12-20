@@ -41,7 +41,7 @@ export function useRecommendations(category: WorkType) {
     try {
       const items = await fetchWorks(undefined,1);
       updateSlice({
-        available: items.items.length > 0,
+        available: Object.keys(items.items).length > 0,
       });
     } catch (error) {
       console.error("Erro ao verificar disponibilidade de itens:", error);
