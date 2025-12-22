@@ -4,7 +4,7 @@ import { WorkType } from "../types/works";
 
 export const fetchWorks = async (type?: WorkType, limit?:number) => {
   try {
-    const response = await api.get(`/catalog?${type ? `categoria=${type}` : ""}${limit ? `&limit=${limit}` : ""}`);
+    const response = await api.get(`/catalog?${type ? `category=${type}` : ""}${limit ? `&limit=${limit}` : ""}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching ${type}:`, error);
