@@ -41,7 +41,6 @@ const ItemThumb: React.FC<ItemThumbProps> = ({
       onClick();
       return;
     }
-    console.log("Navigating to item:", item);
     navigate(`/work/${item.id}`, { state: { item } });
   };
 
@@ -65,6 +64,11 @@ const ItemThumb: React.FC<ItemThumbProps> = ({
 
           return <Icon key={i} className={className} />;
         })}
+        {rating === 6 && (
+          <Star
+            className="h-3 w-3 text-yellow-400 fill-yellow-400"
+          />
+        )}
       </div>
     );
   };
@@ -82,7 +86,10 @@ const ItemThumb: React.FC<ItemThumbProps> = ({
       `}
       onClick={handleClick}
     >
-      <div className="relative w-full overflow-hidden rounded-md aspect-2/3">
+      <div className={`
+        relative w-full overflow-hidden rounded-md aspect-2/3
+        ${item.rating === 6 ? "six-star-highlight" : ""}
+      `}>
         {item.cover_url ? (
           <img
             src={item.cover_url}

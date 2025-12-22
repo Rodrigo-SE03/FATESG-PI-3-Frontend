@@ -6,6 +6,7 @@ import { ScrollToTop } from "../components/common/ScrollToTop";
 import { CatalogProvider } from "../context/CatalogContext";
 import { WorkAddSearchProvider } from "../context/WorkAddSearchContext";
 import { RecommendationsProvider } from "../context/RecommendationsContext";
+import { ErrorBoundary } from "../context/ErrorBoundary";
 
 // Páginas
 import Home from "../pages/Home/Home";
@@ -15,6 +16,7 @@ import Confirmation from "../pages/AuthPages/Confirmation";
 import ForgotPassword from "../pages/AuthPages/ForgotPassword";
 import RecoverPassword from "../pages/AuthPages/RecoverPassword";
 import NotFound from "../pages/OtherPage/NotFound";
+import Maintenance from "../pages/OtherPage/Maintenance";
 import WorkDetails from "../pages/Work/WorkDetails";
 import Movies from "../pages/Movies/Movies";
 import MoviesAdd from "../pages/Movies/MoviesAdd";
@@ -44,8 +46,10 @@ function AppRoutes() {
             <CatalogProvider>
               <WorkAddSearchProvider>
                 <RecommendationsProvider>
-                  <ScrollToTop />
-                  <AppLayout />
+                  <ErrorBoundary>
+                    <ScrollToTop />
+                    <AppLayout />
+                  </ErrorBoundary>
                 </RecommendationsProvider>
               </WorkAddSearchProvider>
             </CatalogProvider>,
@@ -86,6 +90,7 @@ function AppRoutes() {
 
     // PÚBLICO
     { path: "*", element: <NotFound /> },
+    { path: "manutencao", element: <Maintenance /> },
   ]);
 
   return <RouterProvider router={router} />;

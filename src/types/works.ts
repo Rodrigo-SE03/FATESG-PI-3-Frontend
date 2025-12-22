@@ -6,6 +6,7 @@ export type Metadata = {
   // Filmes
   director?: string;
   duration?: string;
+  star?: string;
   
   // Livros
   author?: string;
@@ -18,6 +19,16 @@ export type Metadata = {
   // Jogos
   platform?: string;
   developers?: string;
+
+  // Mangás
+  authors?: string[];
+  chapters?: number;
+  volumes?: number;
+
+  // Séries
+  creators?: string;
+  main_cast?: string;
+  total_seasons?: number;
 };
 
 export interface WorkItem {

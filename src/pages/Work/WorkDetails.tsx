@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Star, StarHalf } from "lucide-react";
 import SimilarRecommendations from "../../components/workDetails/SimilarRecommendations";
+import ConfirmModal from "../../components/ui/modal/ConfirmModal";
+import { Axios, AxiosError } from "axios";
 
 const MAX_STARS = 5;
 
@@ -31,6 +33,7 @@ const WorkDetails: React.FC = () => {
   });
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [edit,setEdit] = useState(false);
 
   const { id } = useParams<{ id: string }>();
@@ -97,6 +100,7 @@ const WorkDetails: React.FC = () => {
         return [
           m.director && { label: "Direção", value: m.director },
           m.duration && { label: "Duração", value: m.duration },
+          m.star && { label: "Atores principais", value: m.star },
         ].filter(Boolean) as { label: string; value: string | number }[];
 
       case "livro":
@@ -128,6 +132,20 @@ const WorkDetails: React.FC = () => {
           },
         ].filter(Boolean) as { label: string; value: string | number }[];
 
+      case "serie":
+        return [
+          m.creators && { label: "Criadores", value: m.creators },
+          m.main_cast && { label: "Elenco Principal", value: m.main_cast },
+          typeof m.total_seasons === "number" && { label: "Temporadas", value: m.total_seasons },
+        ].filter(Boolean) as { label: string; value: string | number }[];
+    
+      case "manga":
+        return [
+          m.authors && m.authors.length && { label: "Autores", value: m.authors.join("; ") },
+          typeof m.chapters === "number" && { label: "Capítulos", value: m.chapters },
+          typeof m.volumes === "number" && { label: "Volumes", value: m.volumes },
+        ].filter(Boolean) as { label: string; value: string | number }[];
+
       default:
         return [];
     }
@@ -146,14 +164,23 @@ const WorkDetails: React.FC = () => {
         color: "success",
       });
       setItem((prevItem) => prevItem ? { ...prevItem, ...payload } : prevItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao adicionar item à biblioteca:", error);
-      setToastData({
-        open: true,
-        title: "Erro",
-        message: `Não foi possível adicionar ${item.title} à sua coleção.`,
-        color: "error",
-      });
+      if (error.status === 406) {
+        setToastData({
+          open: true,
+          title: "Erro",
+          message: `Você já possui um item com 6 estrelas nessa categoria.`,
+          color: "error",
+        });
+      } else {
+        setToastData({
+          open: true,
+          title: "Erro",
+          message: `Não foi possível adicionar ${item.title} à sua coleção.`,
+          color: "error",
+        });
+      }
     }
     setLoading(false);
   };
@@ -170,14 +197,23 @@ const WorkDetails: React.FC = () => {
         color: "success",
       });
       setItem((prevItem) => prevItem ? { ...prevItem, ...payload } : prevItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao editar item na biblioteca:", error);
-      setToastData({
-        open: true,
-        title: "Erro",
-        message: `Não foi possível atualizar ${item.title} na sua coleção.`,
-        color: "error",
-      });
+      if (error.status === 406) {
+        setToastData({
+          open: true,
+          title: "Erro",
+          message: `Você já possui um item com 6 estrelas nessa categoria.`,
+          color: "error",
+        });
+      } else {
+        setToastData({
+          open: true,
+          title: "Erro",
+          message: `Não foi possível atualizar ${item.title} na sua coleção.`,
+          color: "error",
+        });
+      }
     }
     setLoading(false);
   };
@@ -202,6 +238,7 @@ const WorkDetails: React.FC = () => {
         color: "error",
       });
     }
+    setConfirmModalOpen(false);
     setLoading(false);
   };
 
@@ -225,6 +262,11 @@ const WorkDetails: React.FC = () => {
 
           return <Icon key={i} className={className} />;
         })}
+        {rating === 6 && (
+          <Star
+            className="h-3 w-3 text-yellow-400 fill-yellow-400"
+          />
+        )}
       </div>
     );
   };
@@ -264,7 +306,7 @@ const WorkDetails: React.FC = () => {
 
                 <button
                   type="button"
-                  onClick={handleRemove}
+                  onClick={() => setConfirmModalOpen(true)}
                 >
                   <Trash2 className="h-6 w-6 text-red-600" />
                 </button>
@@ -389,6 +431,17 @@ const WorkDetails: React.FC = () => {
           loading={loading}
         />
       </Modal>
+
+      <ConfirmModal
+        isOpen={confirmModalOpen}
+        isLoading={loading}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleRemove}
+        title="Confirmar Remoção"
+        message={`Tem certeza que deseja remover "${item.title}" da sua coleção?`}
+        buttonText="Remover"
+        variant="danger"
+      />
 
       <Toast
         open={toastData?.open || false}

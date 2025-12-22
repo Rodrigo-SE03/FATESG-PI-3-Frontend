@@ -13,10 +13,10 @@ Amplify.configure(awsConfig);
 
 createRoot(document.getElementById("root")!).render(
   <AuthProvider>
-    <ThemeProvider>
-      <AppWrapper>
-        <AppRoutes />
-      </AppWrapper>
-    </ThemeProvider>
+      <ThemeProvider>
+        <AppWrapper>
+          <AppRoutes />
+        </AppWrapper>
+      </ThemeProvider>
   </AuthProvider>,
 );

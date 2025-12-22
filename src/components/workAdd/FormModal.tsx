@@ -23,7 +23,7 @@ type FormModalProps = {
   loading?: boolean;
 };
 
-const MAX_RATING = 5;
+const MAX_RATING = 6;
 
 const FormModal: React.FC<FormModalProps> = ({ item, onClose, onSubmit, onEdit, isEdit, initialData, loading }) => {
   const [status, setStatus] = useState<Status>(initialData?.status || "completed");

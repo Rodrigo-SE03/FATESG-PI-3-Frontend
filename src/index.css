@@ -861,6 +861,10 @@ span.flatpickr-weekday,
   ring-1 rounded-lg ring-inset ring-light-bg/10 dark:ring-dark-bg/10;
 }
 
+.danger-button-colors {
+  @apply bg-error-600 text-white hover:bg-error-800;
+}
+
 /* Estilos das tabelas */
 .table-header {
   @apply border-light-border dark:border-dark-border bg-brand-50 dark:bg-brand-primary text-light-text dark:text-dark-text sticky top-0 z-10;
@@ -890,4 +894,12 @@ span.flatpickr-weekday,
 /* Tamanho dos ícones */
 .icon-size {
   @apply h-8 w-8;
+}
+
+.six-star-highlight {
+  @apply relative rounded-lg;
+  box-shadow:
+    0 0 8px rgb(234 179 8 / 0.6),         /* glow interno */
+    0 0 10px rgb(234 179 8 / 0.45),       /* glow médio */
+    0 0 20px rgb(234 179 8 / 0.25);       /* halo externo */
 }
