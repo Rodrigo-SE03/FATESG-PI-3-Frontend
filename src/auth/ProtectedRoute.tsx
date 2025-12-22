@@ -7,7 +7,7 @@ const ProtectedRoute = () => {
   const location = useLocation();
 
   if (loadingUser) return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center text-light-text dark:text-dark-text">
       <LoadingSpinner size={50} text="Carregando" />
     </div>
   );
